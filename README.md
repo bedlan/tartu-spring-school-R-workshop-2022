@@ -5,13 +5,14 @@
 
 - Install [R](https://cran.r-project.org/mirrors.html) and [Rstudio](https://www.rstudio.com/products/rstudio/download/#download)
 
-- Packages
-
+- Core R packages
   ```R
-  install.packages(c("tidyverse", "ggplot2", "knitr"))
+  install.packages(c("tidyverse", "ggplot2", "knitr", "rmarkdown"))
   ```
-
+- `Latex` and `pandoc` if you want to render the rmarkdown notebook into pdf (optional);
 - Rmarkdown template
+
+- Useful R cheatsheets
 
 ## Day 1
 (1) Basic R commands (e.g., data structures, conditional statements, for loop & function) and Rstudio (1 h) - Yingqi
