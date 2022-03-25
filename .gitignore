@@ -1,6 +1,7 @@
 # History files
 .Rhistory
 .Rapp.history
+*.DS_Store
 
 # Session Data files
 .RData
@@ -30,6 +31,7 @@ vignettes/*.pdf
 # knitr and R markdown default cache directories
 *_cache/
 /cache/
+*.log
 
 # Temporary files created by R markdown
 *.utf8.md

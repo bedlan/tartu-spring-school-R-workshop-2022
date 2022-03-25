@@ -5,13 +5,25 @@
 
 - Install [R](https://cran.r-project.org/mirrors.html) and [Rstudio](https://www.rstudio.com/products/rstudio/download/#download)
 
-- Packages
-
+- Core R packages
   ```R
-  install.packages(c("tidyverse", "ggplot2", "knitr"))
+  install.packages(c("tidyverse", "ggplot2", "knitr", "rmarkdown"))
+  ```
+  
+- `Latex` and [`pandoc`](https://pandoc.org/installing.html) if you want to render the rmarkdown notebook into pdf or html. The following commands are used to install `pandoc` via homebrew on your terminal.
+
+  ```bash
+  # install homebrew
+  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+  # install pandoc
+  brew install pandoc
   ```
 
 - Rmarkdown template
+
+  Pls open the Rmarkdown template file (**Rmarkdown-template.Rmd**) with Rstudio, and render (click knit or **shift + cmd + k**) it on your computer. If everything goes well, you should get a pdf document in the same directory.
+
+- Useful R cheatsheets
 
 ## Day 1
 (1) Basic R commands (e.g., data structures, conditional statements, for loop & function) and Rstudio (1 h) - Yingqi
