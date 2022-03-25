@@ -1,0 +1,68 @@
+---
+title: "R Markdown Template"
+author: "Yingqi Jing"
+date: "`r format(Sys.time(), '%B %e, %Y')`"
+output:
+  # html_document:
+  pdf_document:
+     fig_crop: true
+     fig_caption: true
+     latex_engine: xelatex
+     keep_tex: false
+     citation_package: biblatex # important: will use autocite in latex
+     toc: true
+     toc_depth: 4
+     number_section: true
+link-citations: TRUE
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(ggplot2)
+library(dplyr)
+library(tidyr) # gather & spread
+library(tidyverse)
+library(purrr)
+knit_hooks$set(crop = hook_pdfcrop, pars = function(before, options, envir) {
+  if (before) {
+    par(family = my.font)
+  } else {
+    NULL
+  }
+})
+opts_chunk$set(
+  fig.path = "figures/",
+  dev = "cairo_pdf", dev.args = list(bg = "white"), # or quartz_pdf (for lattice)
+  fig.height = 5,
+  fig.width = 6,
+  message = F,
+  warning = F,
+  autodep = T,
+  cache.comments = F,
+  crop = T,
+  comment = NA,
+  pars = T
+)
+# graphics setup:
+my.font <- "Helvetica"
+```
+
+
+\clearpage
+
+Introduction
+============
+
+```{r print, cache.path = "cache/", cache=T}
+print("Hello R markdown!")
+```
+
+
+```{r}
+mydf = data.frame(id = 1:4, lang = c("Estonian", "Finnish", "Hungarian", "North Saami"), 
+                  subfam = factor(c("Finnic", "Finnic", "Ugric", "Saami")))
+mydf
+```
+
+
+

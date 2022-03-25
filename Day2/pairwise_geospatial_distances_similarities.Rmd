@@ -1,0 +1,134 @@
+---
+title: "R Markdown Template"
+author: "Yingqi Jing"
+date: "`r format(Sys.time(), '%B %e, %Y')`"
+header-includes:
+  - \usepackage{textcomp}
+  - \renewcommand{\thefigure}{S\arabic{figure}}
+  - \renewcommand{\thetable}{S\arabic{table}}
+  - \renewcommand{\thesection}{S\arabic{section}}
+  - \renewcommand{\thesubsection}{S\arabic{section}.\arabic{subsection}}
+  - \usepackage{tocloft}
+  - \settowidth{\cftsecnumwidth}{S10x}
+  - \usepackage{booktabs}
+#  - \usepackage{mathtools}
+  - \usepackage{makecell}
+#  - \usepackage{tikz}
+output:
+   bookdown::pdf_document2:
+  # pdf_document:
+     fig_crop: true
+     fig_caption: true
+     latex_engine: xelatex
+     keep_tex: true
+     citation_package: biblatex # important: will use autocite in latex
+     toc: true
+     toc_depth: 4
+     number_section: true
+     pandoc_args: ["--variable=lof","--variable=lot","--bibliography=/Users/jakejing/switchdrive/bib/references.bib", "--csl=/Users/jakejing/switchdrive/bib/unified-style-linguistics.csl", "--template=latextemplates/simple_format_new.tex"]
+link-citations: TRUE
+---
+
+```{r setup, include=FALSE}
+library(knitr)
+library(ggplot2)
+library(gridExtra)
+library(grid)
+library(dplyr)
+library(magrittr)
+library(tidyr) # gather
+library(tibble) # rowtocolumn
+library(kableExtra) # kable
+library(Rcpp)
+library(RcppArmadillo)
+library(inline) # masked from ‘package:Rcpp’ registerPlugin
+library(microbenchmark) # microbenchmark timings
+library(RcppParallel)
+library(RInside)
+library(data.table) # fread
+library(foreach) # foreach
+library(parallel) # mclapply
+library(doParallel)
+registerDoParallel(cores = 6)
+library(rstan)
+library(pdftools) # tikz
+library(tikzDevice) # tikz device
+library(purrr)
+# library(reticulate) # python engine
+# use_python('/usr/local/bin/python3')
+# library(JuliaCall) # julia engine
+knit_hooks$set(crop = hook_pdfcrop, pars = function(before, options, envir) {
+  if (before) {
+    par(family = my.font)
+  } else {
+    NULL
+  }
+})
+opts_chunk$set(
+  fig.path = "figures/",
+  dev = "cairo_pdf", dev.args = list(bg = "white"), # or quartz_pdf (for lattice)
+  fig.height = 5,
+  fig.width = 6,
+  # engine.path = list(python = '/usr/local/bin/python3',julia = '/Applications/Julia-1.5.app/Contents/Resources/julia/bin'),
+  # python.reticulate = T, # not necessary, if use_python() is used above
+  message = F,
+  warning = F,
+  autodep = T,
+  cache.comments = F,
+  crop = T,
+  comment = NA,
+  pars = T
+)
+# graphics setup:
+my.font <- "Helvetica"
+# ggplot
+theme_set(theme_bw(base_size = 24) +
+  theme(
+    text = element_text(family = my.font),
+    plot.background = element_rect(fill = "transparent", colour = NA)
+  ))
+options(width = 180, knitr.kable.NA = "", knitr.table.format = "latex")
+```
+
+
+\clearpage
+
+Introduction
+============
+
+```{r}
+get_geo_distance = function(long1, lat1, long2, lat2, units = "miles") {
+  loadNamespace("purrr")
+  loadNamespace("geosphere")
+  longlat1 = purrr::map2(long1, lat1, function(x,y) c(x,y))
+  longlat2 = purrr::map2(long2, lat2, function(x,y) c(x,y))
+  distance_list = purrr::map2(longlat1, longlat2, function(x,y) geosphere::distHaversine(x, y))
+  distance_m = list_extract(distance_list, position = 1)
+  if (units == "km") {
+    distance = distance_m / 1000.0;
+  }
+  else if (units == "miles") {
+    distance = distance_m / 1609.344
+  }
+  else {
+    distance = distance_m
+    # This will return in meter as same way as distHaversine function. 
+  }
+  distance
+}
+```
+
+Correlation matrices:
+
+[https://www.geeksforgeeks.org/correlation-matrix-in-r-programming/](https://www.geeksforgeeks.org/correlation-matrix-in-r-programming/)
+
+```{r}
+a = 1:10
+a %>% head(12)
+```
+
+
+
+
+References
+==========
