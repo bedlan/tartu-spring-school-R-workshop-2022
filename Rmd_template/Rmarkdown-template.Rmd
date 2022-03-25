@@ -53,7 +53,7 @@ my.font <- "Helvetica"
 Introduction
 ============
 
-```{r print, cache.path = "cache/", cache=T}
+```{r}
 print("Hello R markdown!")
 ```
 
