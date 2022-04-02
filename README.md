@@ -53,15 +53,15 @@ it's installed you only have to load it, which is much quicker.
   github](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/tree/main/cheatsheets), 
   or individually:
 
-  * [dplyr](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/dplyr.pdf)
-  * [ggplot2](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/ggplot2.pdf)
-  * [purrr](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/purrr.pdf)
-  * [r-basics-1](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/r-basics-1.pdf)
-  * [r-basics-2](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/r-basics-2.pdf)
-  * [rmarkdown](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/rmarkdown.pdf)
-  * [rstudio-ide](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/rstudio-ide.pdf)
-  * [tidyr](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/tidyr.pdf)
-  * [tidyverse](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/tidyverse.pdf)
+  * [dplyr](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/dplyr.pdf)
+  * [ggplot2](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/ggplot2.pdf)
+  * [purrr](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/purrr.pdf)
+  * [r-basics-1](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/r-basics-1.pdf)
+  * [r-basics-2](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/r-basics-2.pdf)
+  * [rmarkdown](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/rmarkdown.pdf)
+  * [rstudio-ide](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/rstudio-ide.pdf)
+  * [tidyr](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/tidyr.pdf)
+  * [tidyverse](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/tidyverse.pdf)
 
 ## Programme
 
