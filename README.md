@@ -62,12 +62,12 @@ it's installed you only have to load it, which is much quicker.
 data structures, conditional statements, ‘for’ loops, functions, and more! 
 (Yingqi Jing)
 
-🧁🫖 Break ☕️🍰
+16:00 - 16:30 🧁🫖 Break ☕️🍰
 
 16.30 - 18:00 *Tidy data and the Tidyverse*, using materials from the Uralic 
 Typological Database (Michael Dunn)
 
-### Day 2
+### Day 2 (6 April)
 
 14.30 - 15:30 *Data clustering with Principal Components Analysis (PCA)* 
 (Michael Dunn)
@@ -75,7 +75,7 @@ Typological Database (Michael Dunn)
 15:30 - 16:00 *Pairwise similarity, geographic distance, heatmaps* (Yingqi 
 Jing)
 
-🧁🫖 Break ☕️🍰
+16:00 - 16:30 🧁🫖 Break ☕️🍰
 
 16.30 - 18:00 *Pairwise similarity, geographic distance, heatmaps (continued)* 
 (Yingqi Jing)
