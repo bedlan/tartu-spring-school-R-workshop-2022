@@ -1,6 +1,6 @@
 # Workshop: 2022 Spring School of Finno-Ugrian Studies
 
-University of Tartu, 
+University of Tartu 
 
 ## Preparation
 
@@ -48,8 +48,20 @@ let's just use the following:
 The tidyverse package is big, so installing it might take some time. But once 
 it's installed you only have to load it, which is much quicker.
 
-- The course homepage also has a list of [Useful R cheatsheets]() **#LINKS 
-  HERE**
+- The course homepage also has a list of useful R cheatsheets. You can download 
+  these [from 
+  github](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/tree/main/cheatsheets), 
+  or individually:
+
+  * [dplyr](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/dplyr.pdf)
+  * [ggplot2](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/ggplot2.pdf)
+  * [purrr](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/purrr.pdf)
+  * [r-basics-1](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/r-basics-1.pdf)
+  * [r-basics-2](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/r-basics-2.pdf)
+  * [rmarkdown](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/rmarkdown.pdf)
+  * [rstudio-ide](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/rstudio-ide.pdf)
+  * [tidyr](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/tidyr.pdf)
+  * [tidyverse](https://github.com/bedlan/tartu-spring-school-R-workshop-2022/cheatsheets/tidyverse.pdf)
 
 ## Programme
 
