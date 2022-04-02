@@ -1,39 +1,81 @@
-# tartu-spring-school-R-workshop-2022
-2022 Spring School of Finno-Ugrian Studies, University of Tartu 2022; Workshop 5-6 April
+# Workshop: 2022 Spring School of Finno-Ugrian Studies
 
-## Installations
+University of Tartu, 
 
-- Install [R](https://cran.r-project.org/mirrors.html) and [Rstudio](https://www.rstudio.com/products/rstudio/download/#download)
+## Preparation
 
-- Core R packages
-  ```R
-  install.packages(c("tidyverse", "ggplot2", "knitr", "rmarkdown"))
-  ```
+To follow the course you will need to install two programmes on your computer. 
+The precise instructions for doing this on different platforms should be 
+available when you follow the links below:
+
+- First, install [R](https://cran.r-project.org/mirrors.html). This is a 
+  statistical computer language, and is necessary for your computer to 
+  understand things written in this language (if only learning natural 
+  languages was so easy!). 
+
+- It's possible to interact with R directly, but while learning it is much 
+  simpler and more convenient to use a special program called 
+  [Rstudio](https://www.rstudio.com/products/rstudio/download/#download), which 
+  you should install only after R itself is installed. RStudio includes lots of 
+  useful things, like the *console*, where you can type in text which your 
+  computer will immediately interpret as things written in the R language, a 
+  *help window*, where you can get information about different R commands, an 
+  interface for install and update *R packages* (collections of R commands that 
+  aren't available by default), graphics viewers, and much more.
+
+Once you're installed R and RStudio you need to install the *tidyverse* 
+package. This is a big collection of R packages which are all designed to give 
+a consistent interface following a consistent logic, and to produce modern and 
+attractive graphics. There are several ways to install a package, but for now 
+let's just use the following:
+
+- Open RStudio and select **Tools** from the menubar, then **Install 
+  Packages...**. A little dialog box will pop up:
+
+  * Leave *Install from* as it is.
   
-- `Latex` and [`pandoc`](https://pandoc.org/installing.html) if you want to render the rmarkdown notebook into pdf or html. The following commands are used to install `pandoc` via homebrew on your terminal.
+  * Type *tidyverse* under *Packages*. 
+  
+  * The *Install to library* item tells RStudio where to put the files 
+    belonging to this new library. The default should be okay (this will be a 
+    directory which all accounts on your computer can see), but there might 
+    also be an option to put it in a directory which only you have access to. 
+    Either option is fine. 
 
-  ```bash
-  # install homebrew
-  /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-  # install pandoc
-  brew install pandoc
-  ```
+  * Make sure the *Install dependencies* box is checked (☑︎) so that all the 
+    packages that are part of the tidyverse package will be installed as well.
 
-- Rmarkdown template
+The tidyverse package is big, so installing it might take some time. But once 
+it's installed you only have to load it, which is much quicker.
 
-  Pls open the Rmarkdown template file (**Rmarkdown-template.Rmd**) with Rstudio, and render (click knit or **shift + cmd + k**) it on your computer. If everything goes well, you should get a pdf document in the same directory.
+- The course homepage also has a list of [Useful R cheatsheets]() **#LINKS 
+  HERE**
 
-- Useful R cheatsheets
+## Programme
 
-## Day 1
-(1) Basic R commands (e.g., data structures, conditional statements, for loop & function) and Rstudio (1 h) - Yingqi
+### Day 1 (5 April)
 
-(2) Introduce UraTyp data and user-interface + ex (2 h) - Michael
+14:30 - 15:00 *Introduction to UraTyp* (Miina Norvik) and *course overview*
+(Michael Dunn)
 
-- Visualization (e.g., scatterplot) & tidyverse syntax
+15:00 - 16:00 *Introduction to R*: Working with RStudio and basic R commands, 
+data structures, conditional statements, ‘for’ loops, functions, and more! 
+(Yingqi Jing)
 
-## Day 2
-(3) PCA + visualization (1 h) - Michael
+🧁🫖 Break ☕️🍰
 
-(4) pairwise similarities & geographical distances and heatmaps (2h) - Yingqi
+16.30 - 18:00 *Tidy data and the Tidyverse*, using materials from the Uralic 
+Typological Database (Michael Dunn)
 
+### Day 2
+
+14.30 - 15:30 *Data clustering with Principal Components Analysis (PCA)* 
+(Michael Dunn)
+
+15:30 - 16:00 *Pairwise similarity, geographic distance, heatmaps* (Yingqi 
+Jing)
+
+🧁🫖 Break ☕️🍰
+
+16.30 - 18:00 *Pairwise similarity, geographic distance, heatmaps (continued)* 
+(Yingqi Jing)
