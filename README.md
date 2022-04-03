@@ -8,7 +8,7 @@ To follow the course you will need to install two programmes on your computer.
 The precise instructions for doing this on different platforms should be 
 available when you follow the links below:
 
-- First, install [R](https://cran.r-project.org/mirrors.html). This is a 
+- First, install [R](https://ftp.eenet.ee/pub/cran/). This is a 
   statistical computer language, and is necessary for your computer to 
   understand things written in this language (if only learning natural 
   languages was so easy!). 
