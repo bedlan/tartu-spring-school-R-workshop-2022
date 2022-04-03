@@ -12,6 +12,8 @@ available when you follow the links below:
   statistical computer language, and is necessary for your computer to 
   understand things written in this language (if only learning natural 
   languages was so easy!). 
+  
+  This might fail if you don't have administrative rights to your computer. If that's the case you should either get administrative rights, or make your administrator do this and the next steps for you.
 
 - It's possible to interact with R directly, but while learning it is much 
   simpler and more convenient to use a special program called 
@@ -45,8 +47,8 @@ let's just use the following:
   * Make sure the *Install dependencies* box is checked (☑︎) so that all the 
     packages that are part of the tidyverse package will be installed as well.
 
-The tidyverse package is big, so installing it might take some time. But once 
-it's installed you only have to load it, which is much quicker.
+The tidyverse package is big, so installing it might take some time. While it is installing you will see lots of text scrolling past in the console window of RStudio.
+Once the tidyverse package is installed you only have to load it, which is much quicker. To test that it has been installed properly, type `libary(tidyverse)` into the console window. If it works you will see messages about **Attaching packages** and **Conflicts**. If you see a scary red massage starting *Error: package or namespace load failed for ‘tidyverse’* then the installation has failed. This usually happens because R was already installed on your computer a long time ago, and the version is too old to support the current version of tidyverse. You will probably need to start again at the top with reinstalling all the software.
 
 - The course homepage also has a list of useful R cheatsheets. You can download 
   these [from 
