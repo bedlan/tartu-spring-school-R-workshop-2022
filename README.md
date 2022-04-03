@@ -34,7 +34,7 @@ let's just use the following:
 
   * Leave *Install from* as it is.
   
-  * Type *tidyverse* under *Packages*. 
+  * Under *Packages* type *tidyverse*
   
   * The *Install to library* item tells RStudio where to put the files 
     belonging to this new library. The default should be okay (this will be a 
