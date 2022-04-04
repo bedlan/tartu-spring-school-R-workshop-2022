@@ -209,6 +209,7 @@ languages %>%
 # Not equals
 finnougric <- languages %>%
   filter(Subfamily != "Samoyed")
+finnougric
 ```
 
 Other logical operators
@@ -216,7 +217,8 @@ Other logical operators
 languages %>%
   filter(Latitude > 60)
 ```
-Filters can be piped together
+- Filters can be piped together
+- Multiple conditions can be included in a single filter function (by default joined by AND, but OR can be specified)
 ```{r}
 languages %>%
   filter(Latitude > 60 & Latitude < 70) %>% # Logical AND is &
@@ -225,7 +227,7 @@ languages %>%
 
 ## Adding columns
 
-The function to add columns is called `mutate` (this isn't the most obvious name, but you use it a lot so you'll get used to it):
+The function to add columns is called `mutate` (this isn't the most obvious name, but it's very useful and frequent so you'll get used to it):
 
 ```{r}
 languages %>%
@@ -235,6 +237,17 @@ languages %>%
 
 ## Grouping and summarising
 
+- `group_by` turns the table into multiple sub-tables which can be operated on separately
+- `summarise` returns a new table with a single row summarising the entire group
+
+```{r}
+# Average latitude and longitude is a weird thing to do, but I don't want to 
+# introduce a new dataset with something sensible to average, so we'll just 
+# pretend it isn't stupid
+languages %>%
+  #group_by(Subfamily) %>% # Check this with and without the group_by line
+  summarise(mean_latitude=mean(Latitude), mean_longitude=mean(Longitude))
+```
 ## Joining
 
 Two different tables can be joined if they both have columns containing the same set of values. These include `left_join`, `right_join`, `inner_join`. I most often end up using `left_join`: this takes one table, and adds columns from another
@@ -243,7 +256,7 @@ In a left join you can specify which columns to join on, or more simply, you can
 ```{r}
 values1 <- values %>% select(Language_ID, Parameter_ID, Value) 
 parameters1 <- parameters %>% select(Parameter_ID=ID, Parameter_Name=Name)
-languages1 <- languages %>% select(Language_ID=ID, Language_Name=Name, Latitude, Longitude)
+languages1 <- languages %>% select(Language_ID=ID, Language_Name=Name, Latitude, Longitude, Subfamily)
 
 values1 %>% 
   left_join(parameters1) %>% 
@@ -258,6 +271,71 @@ parameters1 %>%
   select(Parameter_ID, Parameter_Name) %>%
   View()
 ```
+
+🤨 Take a look at these, think about questions you might ask, e.g.
+
+*Is contrastive consonant length (UT116) related to contrastive vowel length (UT117)?*
+
+```{r message=FALSE}
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name)
+```
+```{r message=FALSE}
+# Dumbest idea:
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name) %>%
+  group_by(Language_Name) %>%
+  summarise(Sum=sum(as.integer(Value)))
+```
+```{r message=FALSE}
+# Cleverer:
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  mutate(Value=as.integer(Value)) %>%
+  select(-Language_ID, -Parameter_Name) %>%
+  pivot_wider(names_from=Parameter_ID, values_from=Value)
+```
+```{r message=FALSE}
+# The cleverest way probably uses pivot_wider
+# 
+
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name) %>%
+  pivot_wider(names_from=Parameter_ID, values_from=Value) %>%
+  mutate(Value=paste0(UT116, UT117)) %>%
+  mutate(Value=fct_recode(Value, "C only"="10", "Both"="11", "V only"="01", "Neither"="00"))
+  # %>% select(-UT116, -UT117)
+```
+The next step would be e.g. to plot these on a map, using `geom_point()`. Let's just do it without the map underlay for now:
+```{r message=FALSE}
+# The cleverest way probably uses pivot_wider
+# 
+
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name) %>%
+  pivot_wider(names_from=Parameter_ID, values_from=Value) %>%
+  mutate(Value=paste0(UT116, UT117)) %>%
+  mutate(Value=fct_recode(Value, "C only"="10", "Both"="11", "V only"="01", "Neither"="00")) %>%
+  #ggplot(aes(x=Longitude, y=Latitude, colour=Value)) + geom_point()
+  #ggplot(aes(x=Longitude, y=Latitude, colour=Value, shape=Subfamily)) + geom_point()
+  ggplot(aes(x=Longitude, y=Latitude,shape=Value, colour=Subfamily)) + geom_point()
+  # %>% select(-UT116, -UT117)
+```
+
 
 ```{r}
 read_csv("data/uralex.csv") %>% 
@@ -296,3 +374,4 @@ ggplot(data=world) +
   theme(legend.position = "none", axis.title.x=element_blank(), axis.title.y=element_blank())
 ```
 
+🤨 Try plotting some typological data onto a map. You might want to use `geom_point()` rather than `geom_text()`
