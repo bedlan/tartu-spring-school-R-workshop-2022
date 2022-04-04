@@ -1,5 +1,7 @@
 <!-- Published at: https://bedlan.github.io/tartu-spring-school-R-workshop-2022/ -->
 
+You can find this page using the link: https://bit.ly/rworktartu
+
 ## Data files
 
 The following links will let you download selections of the Uratyp and Uralex 

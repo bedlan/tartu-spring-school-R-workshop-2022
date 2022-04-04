@@ -2,7 +2,8 @@
 
 University of Tartu 
 
-https://bedlan.github.io/tartu-spring-school-R-workshop-2022/
+Data download links (e.g. to use during course): https://bedlan.github.io/tartu-spring-school-R-workshop-2022/ or 
+https://bit.ly/rworktartu
 
 ## Preparation
 
