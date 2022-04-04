@@ -2,6 +2,8 @@
 
 University of Tartu 
 
+https://bedlan.github.io/tartu-spring-school-R-workshop-2022/
+
 ## Preparation
 
 To follow the course you will need to install two programmes on your computer. 

@@ -1,20 +1,31 @@
 <!-- Published at: https://bedlan.github.io/tartu-spring-school-R-workshop-2022/ -->
 
-# Tartu Uralic Spring School
-
 Important links:
 
 - R code
 - Uratyp data
 - Uralex data
 
+## R code for downloading
+
+The following links will let you download the Uratyp data for offline usage 
+(see the lesson notes for loading the data into R directly)
+
+ - [Uratyp 
+   values]("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv") 
+ - [Uratyp 
+   languages]("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
+ - [Uratyp 
+   parameters]("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
+
 ## Cheat sheets
 
-Some background on using RStudio
+Some background on using RStudio:
 
   * [rstudio-ide](https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/rstudio-ide.pdf)
  
-Useful one- or two-page documents explaining the usage of some important R packages
+Useful one- or two-page documents explaining the usage of some important R 
+packages:
 
   * [dplyr](https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/dplyr.pdf)
   * [ggplot2](https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/cheatsheets/ggplot2.pdf)
