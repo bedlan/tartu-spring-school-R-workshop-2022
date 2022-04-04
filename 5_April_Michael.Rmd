@@ -251,13 +251,13 @@ values1 %>%
   select(-Language_ID, -Parameter_Name)
 ```
 
-<!--
+Let's take a look at the Uratyp parameters:
+
 ```{r}
-read_tsv("data/uralex/lexical-data.tsv") %>% 
-  left_join(read_csv("data/uralex/languages.csv"), by=c("language"="Name")) %>%
-  select(Language_Name=language, Lexeme=item, Meaning=uralex_mng, Cognate_Set=cogn_set, Latitude, Longitude, Subfamly=Subgroup) %>% write_csv("data/uralex.csv")
+parameters1 %>%
+  select(Parameter_ID, Parameter_Name) %>%
+  View()
 ```
--->
 
 ```{r}
 read_csv("data/uralex.csv") %>% 
@@ -295,5 +295,4 @@ ggplot(data=world) +
   # We don't need axis titles etc.
   theme(legend.position = "none", axis.title.x=element_blank(), axis.title.y=element_blank())
 ```
-
 
