@@ -1,0 +1,8 @@
+---
+title: "Data clustering with PCA"
+output: html_notebook
+---
+
+Michael Dunn, 6th of April 2022
+
+<!-- 14.30 - 15:30 *Data clustering with Principal Components Analysis (PCA)* --> 

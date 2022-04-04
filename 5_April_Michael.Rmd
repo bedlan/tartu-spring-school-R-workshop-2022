@@ -1,0 +1,311 @@
+---
+title: "Tidy data and the Tidyverse"
+output: html_notebook
+---
+
+Michael Dunn, 5th of April 2022
+
+## Course overview and philosophy
+
+- Linguists can understand computer languages as languages
+- Linguists need a ‘good enough’ approach
+
+  - Data carpentry, not cabinetmaking
+  - Own your own analysis
+  - Imagine what you want to do, not determined by the availability of tools
+  - Understand what might be possible for a more expert collaborator
+  
+- 🤨 Hmmm.....
+
+## Revision
+
+### Learning strategies
+
+- Like learning a natural language, you can't learn the language first and only *then* start speaking it. Find simple things to use R for and practice. Use it as your spreadsheet programme instead of excel. Use the console when you need a calculator.
+- It can be hard to learn to ‘core’ of R, since it's not clear to a newcomer what that is. Start from what you know and expand outwards
+- The internet is your friend. [Stack Overflow](https://stackoverflow.com) is a huge question-and-answer site for programming. You'll usually find that your questions have already been answered there.
+- The **Help** tab in RStudio displays the output of the `help()` function. How do I use the `read_csv()` function? Use `help(read_csv)`! (in the console `?read_csv` is a shortcut to this) 
+
+### Functions, Loading data
+
+Functions are bundles of commands with a name. You can make your own functions (examples later), as well as use built-in functions and functions that come when your load a library.
+
+At the top of most scripts you write you will want to load the tidyverse functions. You do this with the `library()` function. A function is a word with brackets at the end. If the function has arguments they are put inside the brackets. Thus, to load the tidyverse package you run 
+
+```{r}
+library(tidyverse)
+```
+
+- The `#` at the start of the line tells R not to read that line. You can use it for explanatory comments, or to (perhaps temporarily) disable parts of your code
+- The `read_csv` function can take as its argument the path to the file stored on your computer or as a url. These is also a `read_tsv` function which works exactly the same way, but it read *tab-delimited files* instead of *comma-delimited files*
+- I've commented out the lines loading the data from urls below because I want to be able to work offline. Instead I'm using copies of the files I saved earlier to a directory called `data` in the directory where I am working.
+
+🤨 **TASK** Fix the following block of code so that it reads the data from the internet. Type e.g. `View(languages)` in the console to check the contents of the `languages` variable.
+
+```{r}
+# values <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv") 
+# languages <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
+# parameters <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
+values <- read_csv("data/values.csv")
+languages <- read_csv("data/languages.csv")
+parameters <- read_csv("data/parameters.csv")
+```
+- Where am I working? Type `getwd()` (mnemonic ‘get working directory’) to find out. To set the working directory use `setwd("path/to/the/directory/where/I/want/to/work")` or (if you're using RStudio) choose an option from the menubar **Session** then **Set working directory ➤**
+
+## Piping syntax
+
+The output of one function can be the argument for another. Traditionally most computer language have done this by nesting functions. Thus, the `names` function gives your the names of the header row of a table. Since we've loaded the data from `languages.csv` as an object called `languages`, we could run:
+```{r}
+names(languages)
+```
+
+But we could also do this in one line, with naming the contents of the file, as follows:
+```{r message=FALSE}
+# the message=FALSE argument in the chunk definition stops RStudio from printing out 
+# all the boring details of the data-loading process to the screen
+names(read_csv("data/languages.csv"))
+```
+
+Piping syntax is another way of expressing the same idea. The symbol `%>%` is called a pipe. The thing before the pipe is ‘sent’ to the thing after it as its first argument. The example above could be expressed with a pipe as:
+
+```{r message=FALSE}
+read_csv("data/languages.csv") %>% names()
+```
+
+With the pipe operator the item on the left is ‘sent’ to the next function as its first argument. We could also write:
+
+```{r}
+languages %>% names()
+```
+
+Multiple items can be piped together, so we could even break the previous example up as:
+
+```{r message=FALSE}
+"data/languages.csv" %>% read_csv() %>% names()
+```
+Note that "data/languages.csv" is a character string, not a variable
+
+## What is ‘tidy’ data?
+
+- How does tidy data relate to graphical visualisation of data?
+
+```{r echo=FALSE}
+library(babynames) # you will have to install this if you want to replicate this code
+babynames %>% 
+  filter(name %in% c("Rick", "Morty", "Summer", "Beth", "Jerry")) %>%
+  ggplot(aes(x=year, y=n, colour=name, linetype=sex)) +
+  annotate("point", x=1960, y=11836, colour="red", size=4) +
+  geom_line()
+```
+  * What do we know about the point under the red dot?
+    * It's the name "Jerry"
+    * it's a male name
+    * the year is 1960
+    * the count (n) is about 12000
+  This is one row of data. One point on the plot == one row of the data
+```{r echo=FALSE}
+babynames %>% filter(name=="Jerry", year==1960, sex=="M")
+```
+  * the `aes()` command within `ggplot()` specifies which parameter of the data to map on to which graphical parameter: x=year, y=n, colour=name, sex=linetype
+
+- What is ‘untidy’ data?
+  
+  * In short, untidy data has multiple datapoints per row. For example:
+```{r echo=FALSE}
+# Don't worry about what dark magic I am using here: I'm just taking some tidy 
+# data and making it untidy for the purposes of illustration
+babynames %>% 
+  filter(name=="Jerry", year > 1950, year <= 1960) %>% 
+  pivot_wider(id_cols=c("name", "sex"), names_from="year", values_from="n")
+```
+    You can't map this onto graphical parameters to make a plot like that above: how could you specify `year` in particular? 
+  * (Preview: untidy for one purpose might be tidy for another: pivot_longer 
+    and pivot_wider)
+
+## Making graphs
+
+- The `ggplot()` function starts planning the plot
+- The `aes()` function is an argument of `ggplot()` which specifies which graphical dimensions will be mapped onto which dimensions of the (tidy!!!) data
+- Other map layers can be added using `+`. The various `geom_*()` functions take their parameters from ggplot/aes
+
+```{r}
+babynames %>% 
+  filter(name %in% c("Rick", "Morty", "Summer", "Beth", "Jerry")) %>%
+  ggplot(aes(x=year, y=n, colour=name, linetype=sex))  +
+  geom_line()
+```
+
+- Histograms and density plots
+
+Take the names from the year 2000 and make a histogram of how common they are:
+```{r}
+babynames %>% filter(year==2000) %>% ggplot(aes(x=n)) + geom_histogram()
+```
+
+```{r}
+babynames %>% 
+  filter(year==2000) %>% ggplot(aes(x=n, fill=sex)) + 
+  geom_histogram(position="dodge")
+```
+
+```{r}
+babynames %>% 
+  filter(year==2000) %>% 
+  ggplot(aes(x=log10(n), fill=sex)) + geom_density(alpha=0.5)
+```
+- Bar charts
+- Scatter plots
+- Geographic scatterplots
+
+## Tabular data
+
+- excel data and why we hate it
+- comma delimited and tab delimited files
+- read_excel, read_tsv, read_csv
+- loading uratyp
+
+## Filtering rows and selecting columns
+
+```{r}
+languages
+names(languages)
+```
+The `select` function is used to pick out columns
+```{r}
+# Specify the columns to include
+languages %>%
+  select(Name, Latitude, Longitude, Subfamily)
+```
+You can simultaneously rename columns during a select:
+```{r}
+# Specify the columns to include
+languages %>%
+  select(Language_Name=Name, Latitude, Longitude, Subgroup=Subfamily)
+```
+There is also a `rename` function that can rename columns without selecting (try this out yourself by renaming the `ISO639P3code` column to `ISO_Code`)
+
+```{r}
+#
+```
+
+
+Select can also be used negatively, with `-` signs:
+```{r}
+languages %>%
+  select(-UT_Experts, -GB_Experts, -Source, -Macroarea)
+```
+🤨 Can you see why it's impossible to do a select with a mix of positive values and negative values?
+
+The `filter` function removes/chooses rows:
+
+```{r}
+# Remember, double == is a test for equality, single = is used for arguments, and 
+# as a synonym for <- (which sets a variable to a value)
+languages %>% 
+  filter(Subfamily == "Samoyed")
+```
+
+```{r}
+# Not equals
+finnougric <- languages %>%
+  filter(Subfamily != "Samoyed")
+```
+
+Other logical operators
+```{r}
+languages %>%
+  filter(Latitude > 60)
+```
+Filters can be piped together
+```{r}
+languages %>%
+  filter(Latitude > 60 & Latitude < 70) %>% # Logical AND is &
+  filter(Subfamily == "Finnic" | Subfamily == "Saami") # Logical OR is |
+```
+
+## Adding columns
+
+The function to add columns is called `mutate` (this isn't the most obvious name, but you use it a lot so you'll get used to it):
+
+```{r}
+languages %>%
+  mutate(Label=paste0(Name, "/", Subfamily)) %>%
+  select(Label, Latitude, Longitude)
+```
+
+## Grouping and summarising
+
+## Joining
+
+Two different tables can be joined if they both have columns containing the same set of values. These include `left_join`, `right_join`, `inner_join`. I most often end up using `left_join`: this takes one table, and adds columns from another
+
+In a left join you can specify which columns to join on, or more simply, you can rename columns in different tables so that columns with the same data have the same names (also important here because some tables have the same column names with different contents, e.g. `parameters$Name` is not the same as `languages$Name`):
+```{r}
+values1 <- values %>% select(Language_ID, Parameter_ID, Value) 
+parameters1 <- parameters %>% select(Parameter_ID=ID, Parameter_Name=Name)
+languages1 <- languages %>% select(Language_ID=ID, Language_Name=Name, Latitude, Longitude)
+
+values1 %>% 
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name)
+```
+
+
+```{r}
+# read_csv("data/uralex/forms.csv") %>%
+#   select(lexeme=Value, Language_ID) %>%
+#   left_join(read_csv("data/uralex/languages.csv"), by=c("Language_ID" = "ID")) %>%
+#   View()
+
+
+read_tsv("data/lexical-data.tsv") %>% 
+  filter(uralex_mng %in% c("fire", "water", "earth")) %>%
+  left_join(read_csv("data/uralex/languages.csv"), by=c("language"="Name")) %>%
+  select(language, item, uralex_mng, cogn_set, Latitude, Longitude, Subgroup) %>%
+  ggplot(aes(x=Longitude, y=Latitude, colour=cogn_set, label=item)) + geom_text() + facet_wrap(uralex_mng~.) +
+  theme(legend.position = "none")
+```
+
+**NOTE** We really want to plot latitude-longitude data on a map. There are ways you can do this: if you want to do something fancy you can do it in QGIS (after the next course) — you would just need to prepare the data in R, e.g.
+```{r message=FALSE}
+read_tsv("./data/lexical-data.tsv") %>% 
+  filter(uralex_mng == "fire") %>%
+  left_join(read_csv("./data/uralex/languages.csv"), by=c("language"="Name")) %>%
+  select(language, item, uralex_mng, cogn_set, Latitude, Longitude, Subgroup) %>%
+  # this line puts the processed data into a csv file
+  write_csv("fire.csv")
+```
+
+
+```{r message=FALSE}
+# Install this if you haven't done so already
+# install.packages(rnaturalearth)
+
+# You only need to load the library once per session
+library(rnaturalearth) 
+
+# Prepare the language data to plot
+langdata <- read_tsv("./data/lexical-data.tsv") %>% 
+  filter(uralex_mng == "earth") %>%
+  left_join(read_csv("./data/uralex/languages.csv"), by=c("language"="Name")) %>%
+  select(language, item, uralex_mng, cogn_set, Latitude, Longitude, Subgroup)
+
+# Get world map data from the rnaturalearth library
+world <- ne_countries(scale = "small", returnclass = "sf")
+
+# Plot the geographic data
+ggplot(data=world) +
+  # Set the format of the geographic layer
+  geom_sf(fill="white") + 
+  # Trim the map to include only the area of interest
+  coord_sf(xlim = range(langdata$Longitude, na.rm=TRUE), 
+           ylim = range(langdata$Latitude, na.rm=TRUE)) +
+  # This line overplots the language data on the geographic data (compare to the plain 
+  # scatterplot above)
+  geom_text(data=langdata, aes(x=Longitude, y=Latitude, colour=cogn_set, label=item)) +
+  # We don't need axis titles etc.
+  theme(legend.position = "none", axis.title.x=element_blank(), axis.title.y=element_blank())
+```
+
+
