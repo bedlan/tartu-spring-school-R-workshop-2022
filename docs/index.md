@@ -1,22 +1,18 @@
 <!-- Published at: https://bedlan.github.io/tartu-spring-school-R-workshop-2022/ -->
 
-Important links:
+## Data files
 
-- R code
-- Uratyp data
-- Uralex data
-
-## R code for downloading
-
-The following links will let you download the Uratyp data for offline usage 
-(see the lesson notes for loading the data into R directly)
+The following links will let you download selections of the Uratyp and Uralex 
+data for offline usage (see the lesson notes for loading the data into R 
+directly)
 
  - [Uratyp 
-   values]("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv") 
+   values](https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv) 
  - [Uratyp 
-   languages]("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
+   languages](https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv)
  - [Uratyp 
-   parameters]("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
+   parameters](https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv)
+ - [Uralex data](https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/lexical-data.tsv)
 
 ## Cheat sheets
 

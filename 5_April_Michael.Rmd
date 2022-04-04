@@ -251,45 +251,33 @@ values1 %>%
   select(-Language_ID, -Parameter_Name)
 ```
 
+<!--
+```{r}
+read_tsv("data/uralex/lexical-data.tsv") %>% 
+  left_join(read_csv("data/uralex/languages.csv"), by=c("language"="Name")) %>%
+  select(Language_Name=language, Lexeme=item, Meaning=uralex_mng, Cognate_Set=cogn_set, Latitude, Longitude, Subfamly=Subgroup) %>% write_csv("data/uralex.csv")
+```
+-->
 
 ```{r}
-# read_csv("data/uralex/forms.csv") %>%
-#   select(lexeme=Value, Language_ID) %>%
-#   left_join(read_csv("data/uralex/languages.csv"), by=c("Language_ID" = "ID")) %>%
-#   View()
-
-
-read_tsv("data/lexical-data.tsv") %>% 
-  filter(uralex_mng %in% c("fire", "water", "earth")) %>%
-  left_join(read_csv("data/uralex/languages.csv"), by=c("language"="Name")) %>%
-  select(language, item, uralex_mng, cogn_set, Latitude, Longitude, Subgroup) %>%
-  ggplot(aes(x=Longitude, y=Latitude, colour=cogn_set, label=item)) + geom_text() + facet_wrap(uralex_mng~.) +
+read_csv("data/uralex.csv") %>% 
+  filter(Meaning %in% c("fire", "water", "earth")) %>%
+  ggplot(aes(x=Longitude, y=Latitude, colour=Cognate_Set, label=Lexeme)) + 
+  geom_text() + facet_wrap(~Meaning) +
   theme(legend.position = "none")
 ```
 
-**NOTE** We really want to plot latitude-longitude data on a map. There are ways you can do this: if you want to do something fancy you can do it in QGIS (after the next course) — you would just need to prepare the data in R, e.g.
 ```{r message=FALSE}
-read_tsv("./data/lexical-data.tsv") %>% 
-  filter(uralex_mng == "fire") %>%
-  left_join(read_csv("./data/uralex/languages.csv"), by=c("language"="Name")) %>%
-  select(language, item, uralex_mng, cogn_set, Latitude, Longitude, Subgroup) %>%
-  # this line puts the processed data into a csv file
-  write_csv("fire.csv")
-```
-
-
-```{r message=FALSE}
-# Install this if you haven't done so already
+# Install this if you haven't done so already. Use the menu item under Tools, or run 
+# the following in the console:
 # install.packages(rnaturalearth)
 
 # You only need to load the library once per session
 library(rnaturalearth) 
 
 # Prepare the language data to plot
-langdata <- read_tsv("./data/lexical-data.tsv") %>% 
-  filter(uralex_mng == "earth") %>%
-  left_join(read_csv("./data/uralex/languages.csv"), by=c("language"="Name")) %>%
-  select(language, item, uralex_mng, cogn_set, Latitude, Longitude, Subgroup)
+langdata <- read_csv("./data/uralex.csv") %>% 
+  filter(Meaning == "earth")
 
 # Get world map data from the rnaturalearth library
 world <- ne_countries(scale = "small", returnclass = "sf")
@@ -303,7 +291,7 @@ ggplot(data=world) +
            ylim = range(langdata$Latitude, na.rm=TRUE)) +
   # This line overplots the language data on the geographic data (compare to the plain 
   # scatterplot above)
-  geom_text(data=langdata, aes(x=Longitude, y=Latitude, colour=cogn_set, label=item)) +
+  geom_text(data=langdata, aes(x=Longitude, y=Latitude, colour=Cognate_Set, label=Lexeme)) +
   # We don't need axis titles etc.
   theme(legend.position = "none", axis.title.x=element_blank(), axis.title.y=element_blank())
 ```
