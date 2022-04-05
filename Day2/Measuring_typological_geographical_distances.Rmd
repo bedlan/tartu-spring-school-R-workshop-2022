@@ -190,52 +190,8 @@ Exercises
 
 (1) Pls add the information of typological areas (*uratyp-1.1/cldf/parameters.csv*) to UT dataset. Note: you can use the preprocessed UT data **ut_final_long**. 
 
-```{r}
-feat_areas = read.csv("../Data/uratyp-1.1/cldf/parameters.csv")
-feat_areas = feat_areas %>% 
-  dplyr::select(ID, Area)
-ut_areas = ut_final_long %>% 
-  inner_join(., feat_areas, by = c("feature" = "ID")) 
-```
 
 (2) Pls calculate the typological similarities between languages across typological areas (phonology, morphology and syntax) in UT dataset, and plot them as heatmaps separately. Note: you can remove the lexicon features, and use `facet_wrap` function to create subpanels. 
-
-```{r eval = F}
-ut_area_sim = ut_areas %>% 
-  filter(Area %in% c("Phonology", "Morphology", "Syntax")) %>% 
-  split(.$Area) %>% 
-  map_dfr(., ~{subdata = .x %>% spread(., key = feature, value = value)
-               expand.grid(lgs, lgs, stringsAsFactors = F) %>% 
-                 rowwise() %>% 
-                 mutate(similarity = typological_sim(subdata, Var1, Var2)) %>%
-                 mutate(Area = subdata$Area[1])})
-```
-
-
-```{r fig.width=18, fig.height=6, fig.cap="Typological similarities between Uralic languages across different areas in UT data", eval = F}
-ut_area_sim_sorted = ut_area_sim %>% 
-  mutate(Var1 = factor(Var1, levels = lang_sorted),
-         Var2 = factor(Var2, levels = lang_sorted), 
-         Area = factor(Area, levels = c("Phonology", "Morphology", "Syntax")))
-ut_area_sim_sorted %>%  
-  ggplot(., aes(Var1, Var2, fill = similarity)) +
-  geom_tile() + 
-  # geom_text(data = lgs_sim_sorted,
-  #           mapping = aes(Var1, Var2, 
-  #                         label = round(similarity, digit = 1))) +
-  scale_fill_continuous(type = "viridis") + 
-  facet_wrap(~Area) +
-  # scale_x_discrete(position = "bottom") + 
-  labs(x = NULL, y = NULL) + 
-  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
-        axis.text.y = element_text(size = 9),
-        axis.text.x = element_text(angle = 90, size = 9, hjust = 1),
-        axis.ticks = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank()) + 
-  coord_fixed()
-```
 
 
 \clearpage
