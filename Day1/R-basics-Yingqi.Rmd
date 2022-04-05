@@ -160,6 +160,10 @@ Exercise
 
 (1) Pls load the UraTyp values and language table, and join the two tables by Language ID. Note: the two data.frames have different names for the language ID.
 
+```{r}
+uratyp_df = read.csv("../data/values.csv")
+lang_df = read.csv("../data/languages.csv")
+```
 
 
 \clearpage
