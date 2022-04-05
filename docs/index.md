@@ -14,6 +14,9 @@ directly)
    languages](https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv)
  - [Uratyp 
    parameters](https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv)
+   
+   The paths to the downloadable version of these files are "https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv" etc.
+   
  - [Uralex 
    data](https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/uralex.tsv)
 

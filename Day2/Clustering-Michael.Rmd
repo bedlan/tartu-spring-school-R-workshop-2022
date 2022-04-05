@@ -96,3 +96,8 @@ uratyp_pca$x[,c("PC1", "PC2")] %>%
     geom_text() +
     theme(legend.position = "none")
 ```
+
+🤨 **Exercise** What kind of interesting PCAs can we make with the uratyp data?
+
+  - consider subsets of the data, particular typological domains
+  - compare grambank to uratyp data?

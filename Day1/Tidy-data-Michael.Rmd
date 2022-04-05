@@ -23,8 +23,11 @@ Michael Dunn, 5th of April 2022
 ### Learning strategies
 
 - Like learning a natural language, you can't learn the language first and only *then* start speaking it. Find simple things to use R for and practice. Use it as your spreadsheet programme instead of excel. Use the console when you need a calculator.
+
 - It can be hard to learn to ‘core’ of R, since it's not clear to a newcomer what that is. Start from what you know and expand outwards
+
 - The internet is your friend. [Stack Overflow](https://stackoverflow.com) is a huge question-and-answer site for programming. You'll usually find that your questions have already been answered there.
+
 - The **Help** tab in RStudio displays the output of the `help()` function. How do I use the `read_csv()` function? Use `help(read_csv)`! (in the console `?read_csv` is a shortcut to this) 
 
 ### Functions, Loading data
@@ -38,7 +41,9 @@ library(tidyverse)
 ```
 
 - The `#` at the start of the line tells R not to read that line. You can use it for explanatory comments, or to (perhaps temporarily) disable parts of your code
+
 - The `read_csv` function can take as its argument the path to the file stored on your computer or as a url. These is also a `read_tsv` function which works exactly the same way, but it read *tab-delimited files* instead of *comma-delimited files*
+
 - I've commented out the lines loading the data from urls below because I want to be able to work offline. Instead I'm using copies of the files I saved earlier to a directory called `data` in the directory where I am working.
 
 🤨 **TASK** Fix the following block of code so that it reads the data from the internet. Type e.g. `View(languages)` in the console to check the contents of the `languages` variable.
@@ -47,10 +52,11 @@ library(tidyverse)
 # values <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv") 
 # languages <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
 # parameters <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
-values <- read_csv("data/values.csv")
-languages <- read_csv("data/languages.csv")
-parameters <- read_csv("data/parameters.csv")
+values <- read_csv("../data/values.csv")
+languages <- read_csv("../data/languages.csv")
+parameters <- read_csv("../data/parameters.csv")
 ```
+
 - Where am I working? Type `getwd()` (mnemonic ‘get working directory’) to find out. To set the working directory use `setwd("path/to/the/directory/where/I/want/to/work")` or (if you're using RStudio) choose an option from the menubar **Session** then **Set working directory ➤**
 
 ## Piping syntax
@@ -64,13 +70,13 @@ But we could also do this in one line, with naming the contents of the file, as 
 ```{r message=FALSE}
 # the message=FALSE argument in the chunk definition stops RStudio from printing out 
 # all the boring details of the data-loading process to the screen
-names(read_csv("data/languages.csv"))
+names(read_csv("../data/languages.csv"))
 ```
 
 Piping syntax is another way of expressing the same idea. The symbol `%>%` is called a pipe. The thing before the pipe is ‘sent’ to the thing after it as its first argument. The example above could be expressed with a pipe as:
 
 ```{r message=FALSE}
-read_csv("data/languages.csv") %>% names()
+read_csv("../data/languages.csv") %>% names()
 ```
 
 With the pipe operator the item on the left is ‘sent’ to the next function as its first argument. We could also write:
@@ -82,9 +88,9 @@ languages %>% names()
 Multiple items can be piped together, so we could even break the previous example up as:
 
 ```{r message=FALSE}
-"data/languages.csv" %>% read_csv() %>% names()
+"../data/languages.csv" %>% read_csv() %>% names()
 ```
-Note that "data/languages.csv" is a character string, not a variable
+Note that "../data/languages.csv" is a character string, not a variable
 
 ## What is ‘tidy’ data?
 
@@ -359,7 +365,7 @@ values1 %>%
 
 
 ```{r}
-read_csv("data/uralex.csv") %>% 
+read_csv("../data/uralex.csv") %>% 
   filter(Meaning %in% c("fire", "water", "earth")) %>%
   ggplot(aes(x=Longitude, y=Latitude, colour=Cognate_Set, label=Lexeme)) + 
   geom_text() + facet_wrap(~Meaning) +
