@@ -14,7 +14,8 @@ directly)
    languages](https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv)
  - [Uratyp 
    parameters](https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv)
- - [Uralex data](https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/lexical-data.tsv)
+ - [Uralex 
+   data](https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/uralex.tsv)
 
 ## Cheat sheets
 
