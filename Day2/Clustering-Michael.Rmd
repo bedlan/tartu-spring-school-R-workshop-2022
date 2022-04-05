@@ -28,9 +28,10 @@ languages %>%
   uratyp_data
 ```
 ```{r}
-language_names <- uratyp_data$Name 
-uratyp_data <- as.data.frame(uratyp_data %>% select(-Name))
-row.names(uratyp_data) <- language_names
+#language_names <- uratyp_data$Name 
+#uratyp_data <- as.data.frame(uratyp_data %>% select(-Name))
+#row.names(uratyp_data) <- language_names
+uratyp_data <- uratyp_data %>% column_to_rownames("Name")
 ```
 
 
@@ -44,3 +45,32 @@ uratyp_data %>%
   uratyp.pca
 ```
 
+```{r}
+summary(uratyp.pca)
+```
+
+# Talk about prop of var explained
+
+# graph uratyp.pca$x (with colour coding for Subfamily...) // https://osf.io/v4fhq/
+
+```{r}
+languages <- read_csv("../data/languages.csv") %>% select(Name, Subfamily)
+uratyp.pca$x[,c("PC1", "PC2")] %>% 
+  as.data.frame() %>% 
+  rownames_to_column("Name") %>% 
+  inner_join(languages) %>%
+  ggplot(aes(x=PC1, y=PC2, label=Name, colour=Subfamily)) + geom_text()
+
+```
+Legend is ugly — we want to remove the "a" text examples, and put the subfamily labels directly in the target colour. This can be done, but it's currently quite complicated. Instead we can just zap it:
+
+```{r}
+languages <- read_csv("../data/languages.csv") %>% select(Name, Subfamily)
+uratyp.pca$x[,c("PC1", "PC2")] %>% 
+  as.data.frame() %>% 
+  rownames_to_column("Name") %>% 
+  inner_join(languages) %>%
+  ggplot(aes(x=PC1, y=PC2, label=Name, colour=Subfamily)) + 
+    geom_text() +
+    theme(legend.position = "none")
+```
