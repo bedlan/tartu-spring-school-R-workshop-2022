@@ -12,8 +12,25 @@ Michael Dunn, 6th of April 2022
 
 ## Principal components analysis
 
-- Works from wide data: rows are taxa (languages, species, individuals, etc), and columns are features (typological states, other types of measurement)
+- Interpreting multidimensional data
 
+  * What is a dimension?
+
+- PCA creates creates new dimensions which summarise the variance of the old dimensions such that the first dimension captures the most variance, the second captures as much as possible of the residue, the third likewise...
+
+  * Three-dimensional example of dimensional rotation
+  
+- Intpreting the new components
+
+  * If you're lucky they correlate with something you can identify in the real world — but no guarantee!
+  
+![Uralic PCA](./figures/Uralic-PCA.png)
+
+- Works from wide data: rows are taxa (languages, species, individuals, etc), and columns are features (typological states, other types of measurement)
+ 
+  * This is because each observation is a combination of all its values for every parameter (moral: for some purposes wide data *is* tidy)
+
+Make the data frame for analysis, join the language names:
 ```{r message=FALSE}
 values <- read_csv("../data/values.csv")  %>%
   filter(grepl("UT", Parameter_ID)) %>%
@@ -27,6 +44,8 @@ languages %>%
   select(-Language_ID) ->
   uratyp_data
 ```
+
+PCA requires a matrix/data.frame which contains only the data to analyse; labels are kept separate as row names (tidyverse function are phasing out the idea of having separate rownames: all columns are columns)
 ```{r}
 #language_names <- uratyp_data$Name 
 #uratyp_data <- as.data.frame(uratyp_data %>% select(-Name))
@@ -34,7 +53,7 @@ languages %>%
 uratyp_data <- uratyp_data %>% column_to_rownames("Name")
 ```
 
-
+PCA can't deal with missing data very well. It also hates invariant columns (how do you sensibly talk about the variance of something that doesn't vary?!)
 ```{r}
 library(janitor)
 # uratyp_data[is.na(uratyp_data)] <- 0.5 # :-(
@@ -45,19 +64,17 @@ uratyp_data %>%
   uratyp_pca
 ```
 
+Numeric summary:
 ```{r}
 summary(uratyp_pca)
 ```
-# Talk about prop of var explained
-
-# graph uratyp_pca$x (with colour coding for Subfamily...) // https://osf.io/v4fhq/
 
 Old school visualisation:
 ```{r}
 biplot(uratyp_pca)
 ```
 
-The pca object is a list with an attribute called (uninformatively) `x` which contains the values of the components.
+The pca object is a list with an attribute called (uninformatively) `x` which contains the values of the components. With a bit of housekeeping we can put this back in a tidy form which is easy to plot
 
 ```{r}
 languages <- read_csv("../data/languages.csv") %>% select(Name, Subfamily)
@@ -67,7 +84,7 @@ uratyp_pca$x[,c("PC1", "PC2")] %>%
   inner_join(languages) %>%
   ggplot(aes(x=PC1, y=PC2, label=Name, colour=Subfamily)) + geom_text()
 ```
-Legend is ugly — we want to remove the "a" text examples, and put the subfamily labels directly in the target colour. This can be done, but it's currently quite complicated. Instead we can just zap it:
+The legend is ugly — we want to remove the "a" text examples, and put the subfamily labels directly in the target colour. This can be done, but it's currently quite complicated. Instead we can just zap the legend:
 
 ```{r}
 languages <- read_csv("../data/languages.csv") %>% select(Name, Subfamily)
