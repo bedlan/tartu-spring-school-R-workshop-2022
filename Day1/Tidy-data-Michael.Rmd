@@ -113,11 +113,12 @@ babynames %>%
 ```{r echo=FALSE}
 babynames %>% filter(name=="Jerry", year==1960, sex=="M")
 ```
-  * the `aes()` command within `ggplot()` specifies which parameter of the data to map on to which graphical parameter: x=year, y=n, colour=name, sex=linetype
+  * the `aes()` command within `ggplot()` specifies which parameter of the data to map on to which graphical parameter: `x=year, y=n, colour=name, sex=linetype`
 
 - What is ‘untidy’ data?
   
   * In short, untidy data has multiple datapoints per row. For example:
+  
 ```{r echo=FALSE}
 # Don't worry about what dark magic I am using here: I'm just taking some tidy 
 # data and making it untidy for the purposes of illustration
@@ -126,14 +127,15 @@ babynames %>%
   pivot_wider(id_cols=c("name", "sex"), names_from="year", values_from="n")
 ```
     You can't map this onto graphical parameters to make a plot like that above: how could you specify `year` in particular? 
-  * (Preview: untidy for one purpose might be tidy for another: pivot_longer 
-    and pivot_wider)
+    
+  * Preview: untidy for one purpose might be tidy for another: . In tomorrow's lesson we will do a PCA analysis, which summarises many columns for a single language row
+  * `pivot_longer()` and `pivot_wider()`
 
 ## Making graphs
 
 - The `ggplot()` function starts planning the plot
 - The `aes()` function is an argument of `ggplot()` which specifies which graphical dimensions will be mapped onto which dimensions of the (tidy!!!) data
-- Other map layers can be added using `+`. The various `geom_*()` functions take their parameters from ggplot/aes
+- Other map layers and settings can be added to the `ggplot()` command using `+`. The various `geom_*()` functions take their parameters from ggplot/aes
 
 ```{r}
 babynames %>% 
@@ -189,7 +191,8 @@ You can simultaneously rename columns during a select:
 languages %>%
   select(Language_Name=Name, Latitude, Longitude, Subgroup=Subfamily)
 ```
-There is also a `rename` function that can rename columns without selecting (try this out yourself by renaming the `ISO639P3code` column to `ISO_Code`)
+
+🤨 There is also a `rename` function that can rename columns without selecting (try this out yourself by renaming the `ISO639P3code` column to `ISO_Code`)
 
 ```{r}
 #
@@ -201,6 +204,7 @@ Select can also be used negatively, with `-` signs:
 languages %>%
   select(-UT_Experts, -GB_Experts, -Source, -Macroarea)
 ```
+
 🤨 Can you see why it's impossible to do a select with a mix of positive values and negative values?
 
 The `filter` function removes/chooses rows:
@@ -255,6 +259,13 @@ languages %>%
   #group_by(Subfamily) %>% # Check this with and without the group_by line
   summarise(mean_latitude=mean(Latitude), mean_longitude=mean(Longitude))
 ```
+
+```{r}
+languages %>%
+  group_by(Subfamily) %>%
+  summarise(n_languages=n())
+```
+
 ## Joining
 
 Two different tables can be joined if they both have columns containing the same set of values. These include `left_join`, `right_join`, `inner_join`. I most often end up using `left_join`: this takes one table, and adds columns from another
@@ -279,7 +290,7 @@ parameters1 %>%
   View()
 ```
 
-🤨 Take a look at these, think about questions you might ask, e.g.
+🤨 Take a look at these, think about questions you might ask. You might go back to your favourite typological feature. Here's an example involving the interaction of two features:
 
 *Is contrastive consonant length (UT116) related to contrastive vowel length (UT117)?*
 
@@ -311,7 +322,7 @@ values1 %>%
   pivot_wider(names_from=Parameter_ID, values_from=Value)
 ```
 ```{r message=FALSE}
-# The cleverest way probably uses pivot_wider
+# The cleverest way involves pivot_wider
 
 values1 %>% 
   filter(Parameter_ID %in% c("UT116", "UT117")) %>%
@@ -363,6 +374,7 @@ values1 %>%
   # %>% select(-UT116, -UT117)
 ```
 
+🤨 Come back to this later and try to plot it onto a proper map
 
 ```{r}
 read_csv("../data/uralex.csv") %>% 
