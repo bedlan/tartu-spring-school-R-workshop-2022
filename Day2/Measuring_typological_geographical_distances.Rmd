@@ -92,8 +92,8 @@ Data preprocessing
 -------------------
 
 ```{r}
-uratyp_df = read.csv("../Data/uratyp-1.1/cldf/values.csv")
-lang_df = read.csv("../Data/uratyp-1.1/cldf/languages.csv")
+uratyp_df = read.csv("../data/values.csv")
+lang_df = read.csv("../data/languages.csv")
 ut_data = uratyp_df %>% 
   inner_join(., lang_df, by = c("Language_ID" = "ID")) %>% 
   dplyr::select(Name, Parameter_ID, Value, Subfamily) %>% 
@@ -188,54 +188,10 @@ ggplot(lgs_sim_sorted, aes(Var1, Var2, fill = similarity)) +
 Exercises
 -------------------
 
-(1) Pls add the information of typological areas (*uratyp-1.1/cldf/parameters.csv*) to UT dataset. Note: you can use the preprocessed UT data **ut_final_long**. 
+(1) Pls add the information of typological areas (*parameters.csv*) to UT dataset. Note: you can use the preprocessed UT data **ut_final_long**. 
 
-```{r}
-feat_areas = read.csv("../Data/uratyp-1.1/cldf/parameters.csv")
-feat_areas = feat_areas %>% 
-  dplyr::select(ID, Area)
-ut_areas = ut_final_long %>% 
-  inner_join(., feat_areas, by = c("feature" = "ID")) 
-```
 
 (2) Pls calculate the typological similarities between languages across typological areas (phonology, morphology and syntax) in UT dataset, and plot them as heatmaps separately. Note: you can remove the lexicon features, and use `facet_wrap` function to create subpanels. 
-
-```{r eval = F}
-ut_area_sim = ut_areas %>% 
-  filter(Area %in% c("Phonology", "Morphology", "Syntax")) %>% 
-  split(.$Area) %>% 
-  map_dfr(., ~{subdata = .x %>% spread(., key = feature, value = value)
-               expand.grid(lgs, lgs, stringsAsFactors = F) %>% 
-                 rowwise() %>% 
-                 mutate(similarity = typological_sim(subdata, Var1, Var2)) %>%
-                 mutate(Area = subdata$Area[1])})
-```
-
-
-```{r fig.width=18, fig.height=6, fig.cap="Typological similarities between Uralic languages across different areas in UT data", eval = F}
-ut_area_sim_sorted = ut_area_sim %>% 
-  mutate(Var1 = factor(Var1, levels = lang_sorted),
-         Var2 = factor(Var2, levels = lang_sorted), 
-         Area = factor(Area, levels = c("Phonology", "Morphology", "Syntax")))
-ut_area_sim_sorted %>%  
-  ggplot(., aes(Var1, Var2, fill = similarity)) +
-  geom_tile() + 
-  # geom_text(data = lgs_sim_sorted,
-  #           mapping = aes(Var1, Var2, 
-  #                         label = round(similarity, digit = 1))) +
-  scale_fill_continuous(type = "viridis") + 
-  facet_wrap(~Area) +
-  # scale_x_discrete(position = "bottom") + 
-  labs(x = NULL, y = NULL) + 
-  theme(plot.title = element_text(hjust = 0.5, face = "bold"),
-        axis.text.y = element_text(size = 9),
-        axis.text.x = element_text(angle = 90, size = 9, hjust = 1),
-        axis.ticks = element_blank(),
-        panel.grid.major = element_blank(),
-        panel.grid.minor = element_blank(),
-        panel.background = element_blank()) + 
-  coord_fixed()
-```
 
 
 \clearpage
@@ -297,132 +253,3 @@ geo_dist_sorted %>%
         panel.background = element_blank()) + 
   coord_fixed()
 ```
-
-
-```{r}
-# lgs_sim = combn(lgs, 2) %>% 
-#   t() %>% 
-#   as.data.frame() %>% 
-#   rowwise() %>% 
-#   mutate(similarity = mutual_sim(ut_final, V1, V2))
-```
-
-
-```{r}
-# library(reshape2)
-# get_upper_tri <- function(mat){
-#     mat[lower.tri(mat)]<- NA
-#     return(mat)
-# }
-# sim_mat = ncol(ut_df) - as.matrix(dd)
-# sim_mat = get_upper_tri(sim_mat)
-# melted_mat <- melt(sim_mat, na.rm = TRUE)
-# ggplot(data = melted_cormat, aes(Var2, Var1, fill = value)) +
-#  geom_tile(color = "white") +
-#   scale_fill_continuous(type = "viridis") + 
-#   theme_minimal() +
-#  theme(axis.text.x = element_text(angle = 90, size = 9, hjust = 1))
-```
-
-
-
-```{r}
-# A <- c(1,4,5,6,1)
-# B <- c(4,2,5,6,7)
-# C <- c(3,4,2,4,6)
-# D <- c(2,5,1,4,6)
-# E <- c(6,7,8,9,1)
-# 
-# df <- data.frame(A,B,C,D,E)
-# 
-# CorMat <- cor(df[ ,c("A","B","C","D","E")])
-# 
-# get_upper_tri <- function(CorMat){
-#   CorMat[upper.tri(CorMat)]<- NA
-#   return(CorMat)
-# }
-# 
-# get_lower_tri <- function(CorMat){
-#   CorMat[lower.tri(CorMat)]<- NA
-#   return(CorMat)
-# }
-# 
-# reorder <- function(CorMat){
-#   dd <- as.dist((1-CorMat)/2)
-#   hc <- hclust(dd)
-#   CorMar <- CorMat[hc$order, hc$order]
-# }
-# 
-# library(reshape2)
-# 
-# CorMat <- reorder(CorMat)
-# upper_tri <- get_upper_tri(CorMat)
-# lower_tri <- get_lower_tri(CorMat)
-# meltNum <- melt(lower_tri, na.rm = T)
-# meltColor <- melt(upper_tri, na.rm = T)
-# library(tidyverse)
-#  ggplot() +
-#   labs(x = NULL, y = NULL) +
-#   geom_tile(data = meltColor, 
-#             mapping = aes(Var2, Var1, 
-#                           fill = value)) +
-#   geom_text(data = meltNum,
-#             mapping = aes(Var2, Var1,
-#                           label = round(value, digit = 2))) +
-#   scale_x_discrete(position = "top") +
-#   # scale_fill_gradient(low = "white", high = "firebrick4",
-#   #                     limit = c(-1,1), name = "Pearson\nCorrelation") +
-#   theme(plot.title = element_text(hjust = 0.5, face = "bold"),
-#         panel.grid.major = element_blank(),
-#         panel.grid.minor = element_blank(),
-#         panel.background = element_blank()) +
-#   coord_fixed()
-```
-
-
-
-```{r}
-# dd = dist(ut_df, "manhattan") # calculate the absolute differences between langs
-# plot(hclust(dd))
-
-# pheat = pheatmap(as.matrix(ut_final), 
-#          legend = F, 
-#          cluster_cols = F)
-```
-
-
-
-
-```{r eval = F, echo = F}
-# get_geo_distance = function(long1, lat1, long2, lat2, units = "km") {
-#   loadNamespace("purrr")
-#   loadNamespace("geosphere")
-#   longlat1 = purrr::map2(long1, lat1, function(x,y) c(x,y))
-#   longlat2 = purrr::map2(long2, lat2, function(x,y) c(x,y))
-#   distance_m = purrr::map2(longlat1, longlat2, function(x,y) geosphere::distHaversine(x, y)) %>% unlist
-#   # print(distance_list)
-#   # distance_m = list_extract(distance_list, position = 1)
-#   if (units == "km") {
-#     distance = distance_m / 1000.0;
-#   }
-#   else if (units == "miles") {
-#     distance = distance_m / 1609.344
-#   }
-#   else {
-#     distance = distance_m
-#     # This will return in meter as same way as distHaversine function. 
-#   }
-#   distance
-# }
-# get_geo_distance(long1 = 28.53, lat1 = 59.78, 
-#                  long2 = 27, lat2 = 57.85, units = "km")
-```
-
-```{r eval = F, echo=F}
-# distHaversine(lang_geo["Courland_Livonian", ], 
-#               lang_geo["Central_Veps", ])/1000
-# distHaversine(lang_geo["Ludian", ], 
-#               lang_geo["Central_Veps", ])/1000
-# geographical_dist(lang_geo, x = "Courland_Livonian", y = "Central_Veps")
-```
-
