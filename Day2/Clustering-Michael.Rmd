@@ -7,8 +7,177 @@ Michael Dunn, 6th of April 2022
 
 <!-- 14.30 - 15:30 *Data clustering with Principal Components Analysis (PCA)* --> 
 
-- Revision of previous lesson (to be decided)
-- More on `pivot_wider()` and `pivot_longer()`
+## Grouping and summarising
+
+- `group_by` turns the table into multiple sub-tables which can be operated on separately
+- `summarise` returns a new table with a single row summarising the entire group
+
+```{r}
+# Average latitude and longitude is a weird thing to do, but I don't want to 
+# introduce a new dataset with something sensible to average, so we'll just 
+# pretend it isn't stupid
+languages %>%
+  #group_by(Subfamily) %>% # Check this with and without the group_by line
+  summarise(mean_latitude=mean(Latitude), mean_longitude=mean(Longitude))
+```
+
+```{r}
+languages %>%
+  group_by(Subfamily) %>%
+  summarise(n_languages=n())
+```
+
+## Joining
+
+Two different tables can be joined if they both have columns containing the same set of values. These include `left_join`, `right_join`, `inner_join`. I most often end up using `left_join`: this takes one table, and adds columns from another, leaving `NA` (an empty place holder, ‘Not Available’ when the second table doesn't have values). Compare `inner_join()`, which only outputs rows where both tables have values.
+
+In a left join you can specify which columns to join on, or more simply, you can rename columns in different tables so that columns with the same data have the same names (also important here because some tables have the same column names with different contents, e.g. `parameters$Name` is not the same as `languages$Name`):
+```{r}
+values1 <- values %>% select(Language_ID, Parameter_ID, Value) 
+parameters1 <- parameters %>% select(Parameter_ID=ID, Parameter_Name=Name)
+languages1 <- languages %>% select(Language_ID=ID, Language_Name=Name, Latitude, Longitude, Subfamily)
+
+values1 %>% 
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name)
+```
+
+Let's take a look at the Uratyp parameters:
+
+```{r}
+parameters1 %>%
+  select(Parameter_ID, Parameter_Name) %>%
+  View()
+```
+
+🤨 Take a look at these, think about questions you might ask. You might go back to your favourite typological feature. Here's an example involving the interaction of two features:
+
+*Is contrastive consonant length (UT116) related to contrastive vowel length (UT117)?*
+
+```{r message=FALSE}
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name)
+```
+```{r message=FALSE}
+# Dumbest idea:
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name) %>%
+  group_by(Language_Name) %>%
+  summarise(Sum=sum(as.integer(Value)))
+```
+```{r message=FALSE}
+# Cleverer:
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  mutate(Value=as.integer(Value)) %>%
+  select(-Language_ID, -Parameter_Name) %>%
+  pivot_wider(names_from=Parameter_ID, values_from=Value)
+```
+```{r message=FALSE}
+# The cleverest way involves pivot_wider
+
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name) %>%
+  pivot_wider(names_from=Parameter_ID, values_from=Value) %>%
+  mutate(Value=paste0(UT116, UT117)) %>%
+  mutate(Value=fct_recode(Value, "C only"="10", "Both"="11", "V only"="01", "Neither"="00"))
+  # %>% select(-UT116, -UT117)
+
+# But the paste0 thing is embarrassing...
+```
+
+```{r message=FALSE}
+# Most elegant we can think of so far:
+
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name) %>%
+  pivot_wider(names_from=Parameter_ID, values_from=Value) %>%
+    mutate(Value=case_when(
+      UT116==0 & UT117==0 ~ "Neither",
+      UT116==0 & UT117==1 ~ "V only",
+      UT116==1 & UT117==0 ~ "C only",
+      UT116==1 & UT117==1 ~ "Both"
+      ))
+  # %>% select(-UT116, -UT117)
+```
+
+The next step would be e.g. to plot these on a map, using `geom_point()`. Let's just do it without the map underlay for now:
+```{r message=FALSE}
+# The cleverest way probably uses pivot_wider
+# 
+
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name) %>%
+  pivot_wider(names_from=Parameter_ID, values_from=Value) %>%
+  mutate(Value=paste0(UT116, UT117)) %>%
+  mutate(Value=fct_recode(Value, "C only"="10", "Both"="11", "V only"="01", "Neither"="00")) %>%
+  #ggplot(aes(x=Longitude, y=Latitude, colour=Value)) + geom_point()
+  #ggplot(aes(x=Longitude, y=Latitude, colour=Value, shape=Subfamily)) + geom_point()
+  ggplot(aes(x=Longitude, y=Latitude,shape=Value, colour=Subfamily)) + geom_point()
+  # %>% select(-UT116, -UT117)
+```
+
+🤨 Come back to this later and try to plot it onto a proper map
+
+```{r}
+read_csv("../data/uralex.csv") %>% 
+  filter(Meaning %in% c("fire", "water", "earth")) %>%
+  ggplot(aes(x=Longitude, y=Latitude, colour=Cognate_Set, label=Lexeme)) + 
+  geom_text() + facet_wrap(~Meaning) +
+  theme(legend.position = "none")
+```
+
+```{r message=FALSE}
+# Install this if you haven't done so already. Use the menu item under Tools, or run 
+# the following in the console:
+# install.packages(rnaturalearth)
+
+# You only need to load the library once per session
+library(rnaturalearth) 
+
+# Prepare the language data to plot
+langdata <- read_csv("./data/uralex.csv") %>% 
+  filter(Meaning == "earth")
+
+# Get world map data from the rnaturalearth library
+world <- ne_countries(scale = "small", returnclass = "sf")
+
+# Plot the geographic data
+ggplot(data=world) +
+  # Set the format of the geographic layer
+  geom_sf(fill="white") + 
+  # Trim the map to include only the area of interest
+  coord_sf(xlim = range(langdata$Longitude, na.rm=TRUE), 
+           ylim = range(langdata$Latitude, na.rm=TRUE)) +
+  # This line overplots the language data on the geographic data (compare to the plain 
+  # scatterplot above)
+  geom_text(data=langdata, aes(x=Longitude, y=Latitude, colour=Cognate_Set, label=Lexeme)) +
+  # We don't need axis titles etc.
+  theme(legend.position = "none", axis.title.x=element_blank(), axis.title.y=element_blank())
+```
+
+🤨 Try plotting some typological data onto a map. You might want to use `geom_point()` rather than `geom_text()`
+
+
+--------
 
 ## Principal components analysis
 
