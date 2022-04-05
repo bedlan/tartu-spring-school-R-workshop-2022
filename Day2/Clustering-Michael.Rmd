@@ -42,31 +42,36 @@ uratyp_data %>%
   select_if(function(x) !any(is.na(x)))  %>%
   remove_constant() %>%
   prcomp() ->
-  uratyp.pca
+  uratyp_pca
 ```
 
 ```{r}
-summary(uratyp.pca)
+summary(uratyp_pca)
 ```
-
 # Talk about prop of var explained
 
-# graph uratyp.pca$x (with colour coding for Subfamily...) // https://osf.io/v4fhq/
+# graph uratyp_pca$x (with colour coding for Subfamily...) // https://osf.io/v4fhq/
+
+Old school visualisation:
+```{r}
+biplot(uratyp_pca)
+```
+
+The pca object is a list with an attribute called (uninformatively) `x` which contains the values of the components.
 
 ```{r}
 languages <- read_csv("../data/languages.csv") %>% select(Name, Subfamily)
-uratyp.pca$x[,c("PC1", "PC2")] %>% 
+uratyp_pca$x[,c("PC1", "PC2")] %>% 
   as.data.frame() %>% 
   rownames_to_column("Name") %>% 
   inner_join(languages) %>%
   ggplot(aes(x=PC1, y=PC2, label=Name, colour=Subfamily)) + geom_text()
-
 ```
 Legend is ugly — we want to remove the "a" text examples, and put the subfamily labels directly in the target colour. This can be done, but it's currently quite complicated. Instead we can just zap it:
 
 ```{r}
 languages <- read_csv("../data/languages.csv") %>% select(Name, Subfamily)
-uratyp.pca$x[,c("PC1", "PC2")] %>% 
+uratyp_pca$x[,c("PC1", "PC2")] %>% 
   as.data.frame() %>% 
   rownames_to_column("Name") %>% 
   inner_join(languages) %>%
