@@ -15,38 +15,32 @@ Michael Dunn, 6th of April 2022
 - Works from wide data: rows are taxa (languages, species, individuals, etc), and columns are features (typological states, other types of measurement)
 
 ```{r message=FALSE}
-values <- read_csv("data/values.csv")  %>%
+values <- read_csv("../data/values.csv")  %>%
+  filter(grepl("UT", Parameter_ID)) %>%
   mutate(Value=as.integer(Value)) %>%
   pivot_wider(Language_ID, names_from=Parameter_ID, values_from=Value) 
 #values
-languages <- read_csv("data/languages.csv") %>% select(Name, Language_ID=ID)
+languages <- read_csv("../data/languages.csv") %>% select(Name, Language_ID=ID)
 #languages
 languages %>%
-  left_join(values) %>%
+  inner_join(values) %>%
   select(-Language_ID) ->
   uratyp_data
 ```
 ```{r}
-labels <- uratyp_data$Name 
+language_names <- uratyp_data$Name 
 uratyp_data <- as.data.frame(uratyp_data %>% select(-Name))
-row.names(uratyp_data) <- labels
+row.names(uratyp_data) <- language_names
 ```
 
 
 ```{r}
-languages <- read_csv("data/languages.csv") %>% select(Name, Language_ID=ID)
-R> #languages
-R> languages %>%
-     left_join(values) %>%
-     select(-Language_ID) ->
-     uratyp_data
-R> labels <- uratyp_data$Name 
-R> uratyp_data <- as.data.frame(uratyp_data %>% select(-Name))
-R> row.names(uratyp_data) <- labels
-R> View(uratyp_data)
-```
-
-```{r}
-uratyp_data[is.na(uratyp_data)] <- 0.5 # :-(
+library(janitor)
+# uratyp_data[is.na(uratyp_data)] <- 0.5 # :-(
+uratyp_data %>% 
+  select_if(function(x) !any(is.na(x)))  %>%
+  remove_constant() %>%
+  prcomp() ->
+  uratyp.pca
 ```
 
