@@ -7,7 +7,6 @@ Michael Dunn, 5th of April 2022
 
 ## Course overview and philosophy
 
-- Linguists can understand computer languages as languages
 - Linguists need a ‘good enough’ approach
 
   - Data carpentry, not cabinetmaking
@@ -15,6 +14,8 @@ Michael Dunn, 5th of April 2022
   - Imagine what you want to do, not determined by the availability of tools
   - Understand what might be possible for a more expert collaborator
   
+- Superpower: Linguists can understand computer languages as languages
+
 - 🤨 Hmmm.....
 
 ## Revision
@@ -98,10 +99,10 @@ babynames %>%
   geom_line()
 ```
   * What do we know about the point under the red dot?
-    * It's the name "Jerry"
-    * it's a male name
-    * the year is 1960
-    * the count (n) is about 12000
+    * It's **olive green**, so it's the name "Jerry"
+    * it's a **dotted line** a male name
+    * the **x-axis value** shows that it is the year is 1960
+    * the **y-axis value** count (n) is about 12000
   This is one row of data. One point on the plot == one row of the data
 ```{r echo=FALSE}
 babynames %>% filter(name=="Jerry", year==1960, sex=="M")
@@ -305,7 +306,6 @@ values1 %>%
 ```
 ```{r message=FALSE}
 # The cleverest way probably uses pivot_wider
-# 
 
 values1 %>% 
   filter(Parameter_ID %in% c("UT116", "UT117")) %>%
@@ -316,7 +316,28 @@ values1 %>%
   mutate(Value=paste0(UT116, UT117)) %>%
   mutate(Value=fct_recode(Value, "C only"="10", "Both"="11", "V only"="01", "Neither"="00"))
   # %>% select(-UT116, -UT117)
+
+# But the paste0 thing is embarrassing...
 ```
+
+```{r message=FALSE}
+# Most elegant we can think of so far:
+
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  select(-Language_ID, -Parameter_Name) %>%
+  pivot_wider(names_from=Parameter_ID, values_from=Value) %>%
+    mutate(Value=case_when(
+      UT116==0 & UT117==0 ~ "Neither",
+      UT116==0 & UT117==1 ~ "V only",
+      UT116==1 & UT117==0 ~ "C only",
+      UT116==1 & UT117==1 ~ "Both"
+      ))
+  # %>% select(-UT116, -UT117)
+```
+
 The next step would be e.g. to plot these on a map, using `geom_point()`. Let's just do it without the map underlay for now:
 ```{r message=FALSE}
 # The cleverest way probably uses pivot_wider

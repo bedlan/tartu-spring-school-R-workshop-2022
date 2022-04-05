@@ -6,3 +6,47 @@ output: html_notebook
 Michael Dunn, 6th of April 2022
 
 <!-- 14.30 - 15:30 *Data clustering with Principal Components Analysis (PCA)* --> 
+
+- Revision of previous lesson (to be decided)
+- More on `pivot_wider()` and `pivot_longer()`
+
+## Principal components analysis
+
+- Works from wide data: rows are taxa (languages, species, individuals, etc), and columns are features (typological states, other types of measurement)
+
+```{r message=FALSE}
+values <- read_csv("data/values.csv")  %>%
+  mutate(Value=as.integer(Value)) %>%
+  pivot_wider(Language_ID, names_from=Parameter_ID, values_from=Value) 
+#values
+languages <- read_csv("data/languages.csv") %>% select(Name, Language_ID=ID)
+#languages
+languages %>%
+  left_join(values) %>%
+  select(-Language_ID) ->
+  uratyp_data
+```
+```{r}
+labels <- uratyp_data$Name 
+uratyp_data <- as.data.frame(uratyp_data %>% select(-Name))
+row.names(uratyp_data) <- labels
+```
+
+
+```{r}
+languages <- read_csv("data/languages.csv") %>% select(Name, Language_ID=ID)
+R> #languages
+R> languages %>%
+     left_join(values) %>%
+     select(-Language_ID) ->
+     uratyp_data
+R> labels <- uratyp_data$Name 
+R> uratyp_data <- as.data.frame(uratyp_data %>% select(-Name))
+R> row.names(uratyp_data) <- labels
+R> View(uratyp_data)
+```
+
+```{r}
+uratyp_data[is.na(uratyp_data)] <- 0.5 # :-(
+```
+
