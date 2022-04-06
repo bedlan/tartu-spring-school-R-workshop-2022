@@ -9,14 +9,7 @@ Michael Dunn, 6th of April 2022
 
 ## Revision
 
-Load the data
-```{r}
-#library(tidyverse)
-values <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv") 
-languages <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
-parameters <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
-```
-
+- Load the data
 - Piping between functions
 - Filtering 
 
