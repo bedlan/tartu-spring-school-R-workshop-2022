@@ -1,6 +1,8 @@
 ---
 title: "Data clustering with PCA"
-output: html_notebook
+output:
+  html_document:
+    df_print: paged
 ---
 
 Michael Dunn, 6th of April 2022
@@ -9,22 +11,86 @@ Michael Dunn, 6th of April 2022
 
 ## Revision
 
-- Load the data
+- Load the uratyp data
+```{r message=FALSE}
+library(tidyverse)
+values <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv") 
+languages <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
+parameters <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
+```
 - Piping between functions
+
+```{r}
+#View(languages)
+#languages %>% View()
+languages %>% names()
+```
+```{r}
+languages %>% nrow()
+```
 - Filtering 
+```{r}
+# filter chooses row
+languages %>% filter(Subfamily == "Saami")
+```
+```{r}
+languages %>% 
+  filter(Name == "Hungarian") %>%
+  select(Name, Latitude, Longitude)
+```
+```{r}
+finnic <- languages %>%
+  filter(Subfamily == "Finnic") %>%
+  select(Name, Latitude, Longitude)
+```
+
+The `<-` assignment symbol can also be written `=`:
+```{r}
+finnic = languages %>%
+  filter(Subfamily == "Finnic") %>%
+  select(Name, Latitude, Longitude)
+```
+
+There's also a rightwards assignment symbol:
+```{r}
+languages %>%
+  filter(Subfamily == "Finnic") %>%
+  select(Name, Latitude, Longitude) -> finnic
+```
+
+Other random points:
+
+- R remembers everything since you last restarted R. This can cause problems in a notebook if you e.g. define something in one chunk, then go back and use it in an earlier chunk. It'll work the first time, but when you restart R and try to run the chunks from top to bottom it won't. I test these files by restarting R and running all chunks from the beginning. You can do this by selecting the *Restart R and Run All Chunks* under the **Run** button in the top right of this tab.
+- The inverse of `read_csv()` is `write_csv()`. You can use the `write_csv()` function to put your fancy new table into a file, e.g. 
+```{r}
+languages %>%
+  filter(Subfamily == "Finnic") %>%
+  select(Name, Latitude, Longitude) %>%
+  write_csv("finnic_geographic_data.csv")
+```
 
 ## Grouping and summarising
 
-- `group_by` turns the table into multiple sub-tables which can be operated on separately
 - `summarise` returns a new table with a single row summarising the entire group
+- `group_by` turns the table into multiple sub-tables which can be operated on separately
+
+```{r}
+my_values <- c(4,5,6,7)
+mean(my_values)
+```
 
 ```{r}
 # Average latitude and longitude is a weird thing to do, but I don't want to 
 # introduce a new dataset with something sensible to average, so we'll just 
 # pretend it isn't stupid
 languages %>%
-  #group_by(Subfamily) %>% # Check this with and without the group_by line
-  summarise(mean_latitude=mean(Latitude), mean_longitude=mean(Longitude))
+   group_by(Subfamily) %>%
+   summarise(mean_latitude=mean(Latitude), mean_longitude=mean(Longitude))
+```
+```{r}
+values %>%
+  group_by(Parameter_ID) %>%
+  summarise(Number_of_1s=sum(as.integer(Value)))
 ```
 
 The `n()` function counts the number of lines in its group (or in the entire table if it isn't grouped)
@@ -54,8 +120,8 @@ values1 %>%
 Let's take a look at the Uratyp parameters:
 
 ```{r}
-parameters1 %>%
-  select(Parameter_ID, Parameter_Name) %>%
+parameters %>% 
+  select(ID, Name) %>%
   View()
 ```
 
@@ -90,6 +156,19 @@ values1 %>%
   select(-Language_ID, -Parameter_Name) %>%
   pivot_wider(names_from=Parameter_ID, values_from=Value)
 ```
+```{r message=FALSE}
+# Cleverer:
+values1 %>% 
+  filter(Parameter_ID %in% c("UT116", "UT117")) %>%
+  left_join(parameters1) %>% 
+  left_join(languages1) %>% 
+  mutate(Value=as.integer(Value)) %>%
+  select(-Language_ID, -Parameter_Name) %>%
+  pivot_wider(names_from=Parameter_ID, values_from=Value) %>%
+  mutate(Combined=paste0(UT116, UT117)) %>% 
+  select(-Subfamily)
+```
+
 ```{r message=FALSE}
 # The cleverest way involves pivot_wider
 
@@ -139,7 +218,7 @@ values1 %>%
   mutate(Value=fct_recode(Value, "C only"="10", "Both"="11", "V only"="01", "Neither"="00")) %>%
   #ggplot(aes(x=Longitude, y=Latitude, colour=Value)) + geom_point()
   #ggplot(aes(x=Longitude, y=Latitude, colour=Value, shape=Subfamily)) + geom_point()
-  ggplot(aes(x=Longitude, y=Latitude,shape=Value, colour=Subfamily)) + geom_point()
+  ggplot(aes(x=Longitude, y=Latitude, shape=Value, colour=Subfamily)) + geom_point()
   # %>% select(-UT116, -UT117)
 ```
 
@@ -166,7 +245,7 @@ library(rnaturalearth)
 
 # Prepare the language data to plot
 # lexdata <- read_csv("../data/uralex.csv") %>% 
-lexdata <- read_csv("https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/uralex.tsv") %>%
+lexdata <- read_csv("https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/uralex.csv") %>%
   filter(Meaning == "earth")
 
 # Get world map data from the rnaturalearth library
@@ -177,8 +256,8 @@ ggplot(data=world) +
   # Set the format of the geographic layer
   geom_sf(fill="white") + 
   # Trim the map to include only the area of interest
-  coord_sf(xlim = range(langdata$Longitude, na.rm=TRUE), 
-           ylim = range(langdata$Latitude, na.rm=TRUE)) +
+  coord_sf(xlim = range(lexdata$Longitude, na.rm=TRUE), 
+           ylim = range(lexdata$Latitude, na.rm=TRUE)) +
   # This line overplots the language data on the geographic data (compare to the plain 
   # scatterplot above)
   geom_text(data=lexdata, aes(x=Longitude, y=Latitude, colour=Cognate_Set, label=Lexeme)) +
@@ -187,7 +266,6 @@ ggplot(data=world) +
 ```
 
 🤨 Try plotting some typological data onto a map. You might want to use `geom_point()` rather than `geom_text()`
-
 
 --------
 
@@ -206,6 +284,7 @@ ggplot(data=world) +
   * If you're lucky they correlate with something you can identify in the real world — but no guarantee!
   
 ![Uralic PCA](./figures/Uralic-PCA.png)
+
 
 - Works from wide data: rows are taxa (languages, species, individuals, etc), and columns are features (typological states, other types of measurement)
  
