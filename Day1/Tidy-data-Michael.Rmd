@@ -268,4 +268,10 @@ languages %>%
   select(Name, Subfamily)
 ```
 
+```{r}
+babynames %>%
+  filter(year==2000) %>% 
+  ggplot(aes(x=n, fill=sex)) + geom_histogram(bins=5, position="dodge") + 
+  scale_x_log10(labels=function(x) paste0(format(x, scientific=FALSE), "s")) 
+```
 

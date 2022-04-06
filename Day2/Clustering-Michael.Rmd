@@ -270,3 +270,40 @@ uratyp_pca$x[,c("PC1", "PC2")] %>%
 
   - consider subsets of the data, particular typological domains
   - compare grambank to uratyp data?
+  
+  
+-------
+
+## Reference: Getting data from an excel file
+
+Excel is problematic for many reasons, including some mentioned below. But pragmatically speaking it can often be the most convenient data entry method. Getting data from excel into a format you can analyse isn't always simple. Here are two methods for importing excel data into R:
+
+### Method 1: Export to CSV
+
+Open your file in excel and use the "Save As..." menu option to save the file in `.csv` (comma separated value) format
+
+*PROs*
+
+ - This *might* work
+ 
+*CONs*
+
+ - Depending on how your computer is localised (keyboard settings, language, etc.) excel will use different conventions for the csv. For example, if your computer is running in German it will use `;` rather than `,` as the separater. You will need to experiment with different `read_csv`/`read_delim`/`read_tsv` settings to import this data, and what works for you might not work for somebody else if their computer has different settings.
+ - If you change your excel file you have to go through this manual export process again and remember everything you did to make it work the first time
+ 
+### Method 2: User RStudio's "Import Dataset" menu
+
+From the **File** menu choose **Import Dataset...** then **From excel**. This opens the excel file and displays what would be imported. There are various settings you can change to fix this: which sheet to pick, how to identify where the header row is, what symbol to use for missing data, and some more. The code to import the excel file in this format is displayed in the bottom right: once it looks correct then copy this code into your R script.
+
+![import_excel dialog](./figures/import_excel.png)
+
+*PROs*
+
+- Once you set this up it is a single step with no manual interaction
+- Reproducible. There is no problem to repeat this import any time you e.g. add data to the source excel file)
+- Robust. If this works for you it will work for anybody else (including your most important collaborator: your own future self)
+
+*CONs*
+
+- Frankly I don't see any, at least in comparison to Method 1.
+
