@@ -5,8 +5,7 @@ You can find this page using the link: [https://bit.ly/rworktartu](https://bit.l
 ## Data files
 
 The following links will let you download selections of the Uratyp and Uralex 
-data for offline usage (see the lesson notes for loading the data into R 
-directly)
+data for offline usage.
 
  - [Uratyp 
    values](https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv) 
@@ -19,6 +18,15 @@ directly)
    
  - [Uralex 
    data](https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/uralex.tsv)
+
+If you want to use the data directly from its online home you can copy and paste the following:
+
+```{r}
+values <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv") 
+languages <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
+parameters <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
+uralex <- read_csv("https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/uralex.tsv")
+```
 
 ## Cheat sheets
 

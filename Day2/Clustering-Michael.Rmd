@@ -7,6 +7,18 @@ Michael Dunn, 6th of April 2022
 
 <!-- 14.30 - 15:30 *Data clustering with Principal Components Analysis (PCA)* --> 
 
+## Revision
+
+Load the data
+```{r}
+values <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv") 
+languages <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
+parameters <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
+```
+
+- Piping between functions
+- Filtering 
+
 ## Grouping and summarising
 
 - `group_by` turns the table into multiple sub-tables which can be operated on separately
@@ -21,6 +33,7 @@ languages %>%
   summarise(mean_latitude=mean(Latitude), mean_longitude=mean(Longitude))
 ```
 
+The `n()` function counts the number of lines in its group (or in the entire table if it isn't grouped)
 ```{r}
 languages %>%
   group_by(Subfamily) %>%
@@ -31,7 +44,8 @@ languages %>%
 
 Two different tables can be joined if they both have columns containing the same set of values. These include `left_join`, `right_join`, `inner_join`. I most often end up using `left_join`: this takes one table, and adds columns from another, leaving `NA` (an empty place holder, ‘Not Available’ when the second table doesn't have values). Compare `inner_join()`, which only outputs rows where both tables have values.
 
-In a left join you can specify which columns to join on, or more simply, you can rename columns in different tables so that columns with the same data have the same names (also important here because some tables have the same column names with different contents, e.g. `parameters$Name` is not the same as `languages$Name`):
+In a join you can specify which columns to join on, or more simply, you can rename columns in different tables so that columns with the same data have the same names (also important here because some tables have the same column names with different contents, e.g. `parameters$Name` is not the same as `languages$Name`):
+
 ```{r}
 values1 <- values %>% select(Language_ID, Parameter_ID, Value) 
 parameters1 <- parameters %>% select(Parameter_ID=ID, Parameter_Name=Name)
