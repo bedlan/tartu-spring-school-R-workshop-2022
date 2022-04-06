@@ -183,8 +183,10 @@ Data preprocessing
 -------------------
 
 ```{r}
-uratyp_df = read.csv("../data/values.csv")
-lang_df = read.csv("../data/languages.csv")
+uratyp_df = read.csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv")
+lang_df = read.csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
+# uratyp_df = read.csv("../data/values.csv")
+# lang_df = read.csv("../data/languages.csv")
 ut_data = uratyp_df %>%
   inner_join(., lang_df, by = c("Language_ID" = "ID")) %>%
   dplyr::select(Name, Parameter_ID, Value, Subfamily) %>%
@@ -290,7 +292,8 @@ Exercises
 (1) Pls add the information of typological areas (*parameters.csv*) to UT dataset. Note: you can use the preprocessed UT data **ut_final_long**.
 
 ```{r}
-feat_areas = read.csv("../Data/parameters.csv")
+feat_areas = read.csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
+# feat_areas = read.csv("../Data/parameters.csv")
 feat_areas = feat_areas %>%
   dplyr::select(ID, Area)
 ut_areas = ut_final_long %>%
