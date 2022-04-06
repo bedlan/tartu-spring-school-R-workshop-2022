@@ -84,15 +84,14 @@ if(is.character(lang) | lang == "Estonian"){
 \clearpage
 
 ```{r}
-lang_df = data.frame(id = 1:5,
-          lang = c("Estonian", "Finnish", "English",
-                   "Chinese", "Esperanto"))
+lang_df = data.frame(id = 1:4,
+          lang = c("Estonian", "English", "Chinese", "Esperanto"))
 lang_df
 ```
 
 ```{r if else statement}
 lang_df %>%
-  mutate(family = ifelse(lang == "Estonian", "Estonian", "not Estonian"))
+  mutate(family = ifelse(lang == "Estonian", "Uralic", "not Uralic"))
 ```
 
 We can generalize the `ifelse` into a case of multiple conditions, so that you have not only two options but multiple options.
@@ -100,7 +99,7 @@ We can generalize the `ifelse` into a case of multiple conditions, so that you h
 
 ```{r case when}
 lang_df %>%
-  mutate(family = case_when(lang %in% c("Estonian", "Finnish") ~ "Uralic",
+  mutate(family = case_when(lang %in% c("Estonian") ~ "Uralic",
                             lang %in% c("English") ~ "IE",
                             lang %in% c("Chinese") ~ "Sino-Tibetan",
                             TRUE ~ "unknown"))
@@ -183,8 +182,10 @@ Data preprocessing
 -------------------
 
 ```{r}
-uratyp_df = read.csv("../data/values.csv")
-lang_df = read.csv("../data/languages.csv")
+uratyp_df = read.csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv")
+lang_df = read.csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
+# uratyp_df = read.csv("../data/values.csv")
+# lang_df = read.csv("../data/languages.csv")
 ut_data = uratyp_df %>%
   inner_join(., lang_df, by = c("Language_ID" = "ID")) %>%
   dplyr::select(Name, Parameter_ID, Value, Subfamily) %>%
@@ -290,7 +291,8 @@ Exercises
 (1) Pls add the information of typological areas (*parameters.csv*) to UT dataset. Note: you can use the preprocessed UT data **ut_final_long**.
 
 ```{r}
-feat_areas = read.csv("../Data/parameters.csv")
+feat_areas = read.csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
+# feat_areas = read.csv("../Data/parameters.csv")
 feat_areas = feat_areas %>%
   dplyr::select(ID, Area)
 ut_areas = ut_final_long %>%
