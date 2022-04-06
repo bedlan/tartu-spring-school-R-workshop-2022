@@ -19,13 +19,13 @@ data for offline usage.
  - [Uralex 
    data](https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/uralex.tsv)
 
-If you want to use the data directly from its online home you can copy and paste the following:
+If you want to use the data directly in R from its online home you can copy and paste the following:
 
 ```{r}
 values <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv") 
 languages <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
 parameters <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
-uralex <- read_csv("https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/uralex.tsv")
+lexdata <- read_csv("https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/uralex.tsv")
 ```
 
 ## Cheat sheets

@@ -11,6 +11,7 @@ Michael Dunn, 6th of April 2022
 
 Load the data
 ```{r}
+#library(tidyverse)
 values <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/values.csv") 
 languages <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/languages.csv")
 parameters <- read_csv("https://raw.githubusercontent.com/cldf-datasets/uratyp/v1.1/cldf/parameters.csv")
@@ -151,6 +152,9 @@ values1 %>%
 
 🤨 Come back to this later and try to plot it onto a proper map
 
+## Plotting the spatial distribution of features
+
+
 ```{r}
 read_csv("../data/uralex.csv") %>% 
   filter(Meaning %in% c("fire", "water", "earth")) %>%
@@ -168,7 +172,8 @@ read_csv("../data/uralex.csv") %>%
 library(rnaturalearth) 
 
 # Prepare the language data to plot
-langdata <- read_csv("./data/uralex.csv") %>% 
+# lexdata <- read_csv("../data/uralex.csv") %>% 
+lexdata <- read_csv("https://raw.githubusercontent.com/bedlan/tartu-spring-school-R-workshop-2022/main/data/uralex.tsv") %>%
   filter(Meaning == "earth")
 
 # Get world map data from the rnaturalearth library
@@ -183,7 +188,7 @@ ggplot(data=world) +
            ylim = range(langdata$Latitude, na.rm=TRUE)) +
   # This line overplots the language data on the geographic data (compare to the plain 
   # scatterplot above)
-  geom_text(data=langdata, aes(x=Longitude, y=Latitude, colour=Cognate_Set, label=Lexeme)) +
+  geom_text(data=lexdata, aes(x=Longitude, y=Latitude, colour=Cognate_Set, label=Lexeme)) +
   # We don't need axis titles etc.
   theme(legend.position = "none", axis.title.x=element_blank(), axis.title.y=element_blank())
 ```
