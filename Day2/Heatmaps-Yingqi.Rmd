@@ -73,12 +73,23 @@ if(is.character(lang) & lang == "Estonian"){
 
 ```{r}
 lang = "Estonian"
-if(is.character(lang) | lang == "Estonian"){
-  print("It is a character or it is Estonian!")
+if(lang == "Finnish" | lang == "Estonian"){
+  print("It is Finnish or it is Estonian!")
 }else{
-  print("It is not Estonian!")
+  print("It is neither Finnish or Estonian!")
 }
 ```
+
+```{r}
+# alternative way 
+lang = "Estonian"
+if(lang %in% c("Finnish", "Estonian")){
+  print("It is Finnish or it is Estonian!")
+}else{
+  print("It is neither Finnish or Estonian!")
+}
+```
+
 
 
 \clearpage
@@ -91,7 +102,7 @@ lang_df
 
 ```{r if else statement}
 lang_df %>%
-  mutate(family = ifelse(lang == "Estonian", "Uralic", "not Uralic"))
+  mutate(family = ifelse(lang == "Estonian", "Uralic", "Unknown"))
 ```
 
 We can generalize the `ifelse` into a case of multiple conditions, so that you have not only two options but multiple options.
@@ -102,7 +113,7 @@ lang_df %>%
   mutate(family = case_when(lang %in% c("Estonian") ~ "Uralic",
                             lang %in% c("English") ~ "IE",
                             lang %in% c("Chinese") ~ "Sino-Tibetan",
-                            TRUE ~ "unknown"))
+                            TRUE ~ "Unknown"))
 ```
 
 \clearpage
@@ -122,11 +133,13 @@ Dplyr provides a convenient `rowwise` operation to work on each row of a data.fr
 To facilitate `rowwise` operation, you may need to use `c_across` to select specific columns. For example, if you want to calculate the number of characters of language names in a data.frame.
 
 ```{r}
-mydf = data.frame(id = 1:4,
-           names = c("Yingqi", "John", "Emily", "David"))
+mydf = data.frame(id = 1:5,
+           names = c("Yingqi", "Michael", "John", "Emily", "David"))
 name_length = mydf %>%
   rowwise() %>%
-  mutate(nchar_name = nchar(c_across(names))) %>%
+  mutate(length = paste(c_across(names), "'s name has:", 
+                        nchar(c_across(names)), 
+                        "charaters.")) %>%
   ungroup
 name_length
 ```
@@ -138,8 +151,12 @@ Function
 
 
 ```{r}
-myaverage = function(numvec){
-  average = sum(numvec)/length(numvec)
+myaverage = function(myvec){
+  if(is.numeric(myvec)){
+    average = sum(myvec)/length(myvec)
+  }else{
+    average = sum(nchar(myvec))/length(myvec)
+  }
   return(average)
 }
 ```
@@ -152,7 +169,7 @@ myaverage(myvec)
 
 ```{r calculate the average length of names}
 name_length %>%
-  pull(nchar_name) %>%
+  pull(names) %>%
   myaverage()
 ```
 
